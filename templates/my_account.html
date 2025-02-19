@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account</title>
+    <link rel="stylesheet" href="{% static 'user/css/my_account.css' %}">
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>My Account</h2>
+        {% block sidebar %}
+        <ul>
+            <li><a href="{% url 'my_account' %}" class="active">Dashboard</a></li>
+            <li><a href="{% url 'my_orders' %}">Orders</a></li>
+            <li><a href="{% url 'wallet' %}">Wallet</a></li>
+            <li><a href="{% url 'my_address' %}">Address</a></li>
+            <li><a href="{% url 'user_logout' %}">Logout</a></li>
+        </ul>
+        {% endblock %}
+    </div>
+
+    {% block maincontent %}
+    <!-- Main Content -->
+    <div class="main-content">
+        <header>
+            <h1>Account Details</h1>
+            <a href="{% url 'home' %}"><button class="back-btn" >← Back to Home</button></a>
+
+        </header>
+
+        <section class="profile">
+            <div class="user-info" >
+                
+                <div class="user-details">
+                    <h2>{{User.username}}</h2>
+                    <p>Email: {{User.email}}</p>
+                    <p>Phone: {{User.phone_number}}</p>
+                    <a href="{% url 'edit_profile' %}"><button class="edit-address-btn">Edit Account</button></a>
+                </div>
+                
+            </div>
+            
+        </section>
+    </div>
+    {% endblock %}
+</body>
+</html>

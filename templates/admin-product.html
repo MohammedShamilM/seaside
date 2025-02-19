@@ -1,0 +1,173 @@
+{% extends 'admin-base.html'%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {% block sidebar %}
+        <ul >
+            <li ><a href="{% url 'admin_dash' %}" ><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+            <li><a href="{% url 'admin_order_list' %}"><i class="fas fa-shopping-cart"></i> Orders</a></li>
+            <li><a href="{% url 'admin_products' %}" class="active"><i class="fas fa-box-open"></i> Products</a></li>
+            <li><a href="{% url 'admin_categories' %}"><i class="fas fa-tags"></i> Categories</a></li>
+            <li><a href="{% url 'coupons' %}"><i class="fas fa-percent" ></i> Coupons</a></li>
+            <!-- <li><a href="#"><i class="fas fa-bullhorn"></i> Offers</a></li> -->
+            <li><a href="#"><i class="fas fa-comments"></i> Reviews</a></li>
+            <li><a href="{% url 'user_list' %}"><i class="fas fa-users"></i> Customers</a></li>
+        </ul>
+    {% endblock %}
+    {% block maincontent %}
+    <style>
+        header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.search {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 200px;
+}
+
+.add-product-btn {
+    background-color: #6a5acd;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+}
+
+
+.product-list table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.product-list th, .product-list td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.product-list tr:hover {
+    background-color: #f1f1f1;
+}
+
+.edit-btn, .delete-btn {
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+}
+
+.edit-btn {
+    background-color: #6a5acd;
+    color: #fff;
+}
+.edit-btn, .status {
+        padding: 5px 10px;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+.status {
+    background-color: rgb(255, 0, 0);
+    margin-left: 5px;
+}
+.status.active {
+    background-color: #4CAF50;
+
+}
+
+    </style>
+    <header>
+        <div><h1>Product List</h1></div>
+        <div>
+            <a href="{% url 'add_product' %}"><button class="add-product-btn" >+ Add Product</button></a>
+            <input class="search" type="text" id="searchInput" placeholder="Search">
+
+        </div>
+        
+        
+    </header>
+    <section class="product-list">
+        <table >
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Product ID</th>
+                    <th>Name</th>
+                    <th>Color</th>
+                    <th>Storage</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>offer</th>
+                    <th>Stock</th>
+                    <th style="text-align: center;" colspan="2">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if variants %}
+                {% for variant in variants %}
+                <tr>
+
+                    <td>
+                        {% if variant.images.all %}
+                            <img src="{{ variant.images.all.0.image.url }}" alt="Variant Image" width="50">
+                        {% else %}
+                            <p>No Image</p>
+                        {% endif %}
+                    </td>
+                    <td>{{variant.id}}</td>
+                    <td>{{variant.product.name}}</td>
+                    <td>{{variant.color}}</td>
+                    <td>{{variant.storage}}</td>
+                    <td>{{variant.product.category.name}}</td>
+                    {% if variant.offer_price %}
+                    <td style="text-decoration: line-through; color: red;">${{ variant.price }}</td>
+                    {% else %}
+                    <td>${{ variant.price }}</td>
+                    {% endif %}
+
+                    {% if variant.offer_price %}
+                    <td>{{variant.offer_price}}</td>
+                    {% else %}
+                    <td>none</td>
+                    {% endif %}
+                    <td>{{ variant.stock }}</td>
+                    <td>
+                        {% if variant.is_listed %}
+                        <a href="{% url 'toggle_product_status' variant.id %}"><button class="status active">Listed</button></a>
+                        {% else %}
+                        <a href="{% url 'toggle_product_status' variant.id %}"><button class="status">UnList</button></a>
+                        {% endif %}
+
+                    </td>
+                    <td>                   
+                        <button class="edit-btn">
+                        
+                            <a href="{% url 'admin_products_details' variant_id=variant.id %}" style="text-decoration: none; color: white;">View</a>
+                        </button>                    
+                    </td>
+                </tr>
+                {% endfor %}
+                {% else %}
+                <tr>
+                    <td colspan="8">No variants available</td>
+                </tr>
+                {% endif %}
+                
+            </tbody>
+        </table>
+    </section>
+    {% endblock %}
+
+    
+</body>
+</html>

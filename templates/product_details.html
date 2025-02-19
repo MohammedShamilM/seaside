@@ -1,0 +1,362 @@
+{% extends 'user-base.html' %}
+{% load static %}
+{% block nav %}
+     <a href="{% url 'home' %}" class="nav-item nav-link  ">Home</a>
+     <a href="{% url 'products' %}" class="nav-item nav-link active">Products</a>
+     <a href="#" class="nav-item nav-link">Contact Us</a>
+{% endblock %}
+{% block maincontent %}
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<style>
+    .custom-font {
+    font-family: 'Roboto'; /* Choose your desired font */
+    
+}
+
+</style>
+
+
+<!-- Single Product Start -->
+        <div class="container-fluid py-5 mt-5">
+            <div class="container py-5">
+                <div class="row g-4 mb-5">
+                    
+                    <div class="col-lg-8 col-xl-9">
+                        {% if products %}
+                        <div class="row g-4">
+                            <div class="col-lg-6">
+                                <div class="border rounded">
+                                    {% with products.variants.first.images.first as main_image %}
+                                        {% if main_image %}
+                                            <img id="mainImage" width="100%" src="{{ main_image.image.url }}" alt="{{ product.name }}" class="main-image">
+                                        {% else %}
+                                            <p>No main image available</p>
+                                        {% endif %}
+                                    {% endwith %}
+                                </div>
+                                <div >
+                                    {% for variant in products.variants.all|slice:":1" %}
+                                    {% for image in variant.images.all %}
+                                        <img src="{{ image.image.url }}" width="24%" alt="{{ product.name }}" class="thumbnail" 
+                                            onclick="document.getElementById('mainImage').src = '{{ image.image.url }}'">
+                                    {% endfor %}
+                                    {% endfor %}
+                                    <br>
+                                    {% for variant in products.variants.all|slice:":1" %}
+                                    {% if variant.stock == 0 %}
+                                    <h6>Out of stock</h6>
+                                    {% else %}
+                                    <h6>only {{variant.stock}} stocks available</h6>
+                                    {% endif %}
+                                    {% endfor %}
+                                    {% if products.category.name != 'Accessories' %}
+                                    <!-- Accessories doesn't have variants -->
+                                    <h6>color:</h6>
+                                    {% for variant in products.variants.all %}
+                                    <a href="#" class="btn border border-secondary rounded-pill px-4 py-2 mb-4 text-secondary">{{variant.color}}</a>
+                                    {% endfor %}
+                                    
+                                    {% if products.category.name == 'TVs' %}
+                                    <h6>Inches:</h6>
+                                    {% else %}
+                                    <h6>storage:</h6>
+                                    {% endif %}
+                                    {% for variant in products.variants.all %}
+                                    <a href="" class="btn border border-secondary rounded-pill px-4 py-2 mb-4 text-secondary">{{variant.storage}}</a>
+                                    {% endfor %}  
+                                    
+                                    {% if products.category.name == 'TVs' %}  
+                                    <h6>Resolution:</h6>  
+                                    {% else %}                      
+                                    <h6>RAM:</h6>
+                                    {% endif %}
+                                    {% for variant in products.variants.all %}
+                                    <a href="" class="btn border border-secondary rounded-pill px-4 py-2 mb-4 text-secondary">{{variant.RAM}}</a>
+                                    {% endfor %}
+                                    {% endif %} 
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <h4 class="fw-bold mb-3">{{products.name}}</h4>
+                                <p class="mb-3">Category: {{products.category.name}}</p>
+                                {% if products.variants.first %}
+                                <h5 class="fw-bold custom-font mb-3">₹{{products.variants.first.price}}</h5>
+                                {% endif %}
+                                <div class="d-flex mb-4">
+                                    <i class="fa fa-star text-secondary"></i>
+                                    <i class="fa fa-star text-secondary"></i>
+                                    <i class="fa fa-star text-secondary"></i>
+                                    <i class="fa fa-star text-secondary"></i>
+                                    <i class="fa fa-star"></i>
+                                </div>
+                                <p class="mb-4">{{products.description}}</p>
+                                <!-- <div class="input-group quantity mb-5" style="width: 100px;">
+                                    <div class="input-group-btn">
+                                        <button class="btn btn-sm btn-minus rounded-circle bg-light border" >
+                                            <i class="fa fa-minus"></i>
+                                        </button>
+                                    </div>
+                                    <input type="text" class="form-control form-control-sm text-center border-0" value="1">
+                                    <div class="input-group-btn">
+                                        <button class="btn btn-sm btn-plus rounded-circle bg-light border">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div> -->
+                                {% for variant in products.variants.all|slice:":1" %}
+                                <a href="{% url 'add_to_cart' variant.id %}"  class="btn border border-secondary rounded-pill px-4 py-2 mb-4 text-secondary"><i class="fa fa-shopping-bag me-2 text-secondary"></i> Add to cart</a>
+                                <br>
+                                <a href="{% url 'add_to_wishlist' variant.id  %}" class="btn border border-secondary rounded-pill px-4 py-2 mb-4 text-secondary"><i class="fa fa-shopping-bag me-2 text-secondary"></i> Add to wishlist</a>
+                                {% endfor %}
+
+                                
+                            </div>
+                            <div class="col-lg-12">
+                                    <div class="nav nav-tabs mb-3 information-tabs">                                       
+                                        <button class="information-tab active nav-link text-dark border-white border-bottom-0" onclick="showTab('description')">Description</button>
+                                        
+                                        <button class="information-tab nav-link text-dark border-white border-bottom-0" onclick="showTab('Review')">Reviews</button>                                        
+                                        
+                                    </div>
+                                    <!-- Debit History List -->
+                                    <div class="information-list description" id="descriptions">
+                                        <p>{{products.description}}</p>
+                                        <div class="px-2">
+                                            <div class="row g-4">
+                                                <div class="col-6">
+                                                    <div class="row bg-light align-items-center text-center justify-content-center py-2">
+                                                        <div class="col-6">
+                                                            <p class="mb-0">Weight</p>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <p class="mb-0">1 kg</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row text-center align-items-center justify-content-center py-2">
+                                                        <div class="col-6">
+                                                            <p class="mb-0">Country of Origin</p>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <p class="mb-0">California</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row bg-light text-center align-items-center justify-content-center py-2">
+                                                        <div class="col-6">
+                                                            <p class="mb-0">Quality</p>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <p class="mb-0">High Quality</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row text-center align-items-center justify-content-center py-2">
+                                                        <div class="col-6">
+                                                            <p class="mb-0">Сheck</p>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <p class="mb-0">Healthy</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row bg-light text-center align-items-center justify-content-center py-2">
+                                                        <div class="col-6">
+                                                            <p class="mb-0">Min Weight</p>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <p class="mb-0">250 Kg</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="information-list review" id="reviews" style="display: none;">
+                                        {% for review in reviews %}
+                                        <div class="d-flex">
+                                            <div class="">
+                                                <p class="mb-2" style="font-size: 14px;">{{review.created_at|date:"d-m-Y"}}</p>
+                                                <div class="d-flex justify-content-between">
+                                                    <h5>{{review.user}}</h5>
+
+                                                    <div class="d-flex mb-3">
+                                                        {% if review.rating == 1 %}
+                                                        <i class="fa fa-star text-secondary"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
+                                                        {% elif review.rating == 2 %}
+                                                        <i class="fa fa-star text-secondary"></i><i class="fa fa-star text-secondary"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
+                                                        {% elif review.rating == 3 %}
+                                                        <i class="fa fa-star text-secondary"></i><i class="fa fa-star text-secondary"></i><i class="fa fa-star text-secondary"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
+                                                        {% elif review.rating == 4 %}
+                                                        <i class="fa fa-star text-secondary"></i><i class="fa fa-star text-secondary"></i><i class="fa fa-star text-secondary"></i><i class="fa fa-star text-secondary"></i><i class="fa fa-star"></i>
+                                                        {% elif review.rating == 5 %}
+                                                        <i class="fa fa-star text-secondary"></i><i class="fa fa-star text-secondary"></i><i class="fa fa-star text-secondary"></i><i class="fa fa-star text-secondary"></i><i class="fa fa-star text-secondary"></i>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                                <p>{{review.review}}</p>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                        <div class="d-flex">
+                                            <div class="">
+                                                <p class="mb-2" style="font-size: 14px;">April 12, 2024</p>
+                                                <div class="d-flex justify-content-between">
+                                                    <h5>Sam Peters</h5>
+                                                    <div class="d-flex mb-3">
+                                                        <i class="fa fa-star text-secondary"></i>
+                                                        <i class="fa fa-star text-secondary"></i>
+                                                        <i class="fa fa-star text-secondary"></i>
+                                                        <i class="fa fa-star"></i>
+                                                        <i class="fa fa-star"></i>
+                                                    </div>
+                                                </div>
+                                                <p class="text-dark">The generated Lorem Ipsum is therefore always free from repetition injected humour, or non-characteristic 
+                                                    words etc. Susp endisse ultricies nisi vel quam suscipit </p>
+                                            </div>
+                                        </div>
+                                        {% if messages %}
+                                          <div class="mt-3">
+                                            {% for message in messages %}
+                                              <div class="alert alert-{{ message.tags }}">
+                                                {{ message }}
+                                              </div>
+                                            {% endfor %}
+                                          </div>
+                                        {% endif %}
+                                        {% if  buyed %}
+                                        <form method="post" action="{% url 'add_review' products.id %}">
+                                            {% csrf_token %}
+                                            <h4 class="mb-5 fw-bold">Leave a Reply</h4>
+                                            <div class="row g-4">
+                                                <div class="col-lg-12">
+                                                    <div class="border-bottom rounded my-4">
+                                                        <textarea name="review"  class="form-control border border-secondary bg-light" cols="30" rows="8" placeholder="write your Comment........." spellcheck="false"></textarea>
+                                                    </div>
+                                                </div>
+                                                <label for="rating">Rate the Product:</label>
+                                                <div class="star-rating">
+                                                  <input type="radio" id="star5" name="rating" value="5" required>
+                                                  <label for="star5" title="5 stars">★</label>
+                                                
+                                                  <input type="radio" id="star4" name="rating" value="4">
+                                                  <label for="star4" title="4 stars">★</label>
+                                                
+                                                  <input type="radio" id="star3" name="rating" value="3">
+                                                  <label for="star3" title="3 stars">★</label>
+                                                
+                                                  <input type="radio" id="star2" name="rating" value="2">
+                                                  <label for="star2" title="2 stars">★</label>
+                                                
+                                                  <input type="radio" id="star1" name="rating" value="1">
+                                                  <label for="star1" title="1 star">★</label>
+                                                </div>   
+                                                <button type="submit" class="btn border border-secondary text-secondary rounded-pill px-4 py-3"> Post Comment</button>  
+                                            </div>
+                                        </form>
+                                        {% endif %}
+                                    </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <style>
+                        .star-rating {
+  direction: rtl; /* Flip star order for better accessibility */
+  display: inline-flex;
+  font-size: 2rem;
+}
+
+.star-rating input {
+  display: none;
+}
+
+.star-rating label {
+  cursor: pointer;
+  color: #ccc;
+}
+
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+  color: gold;
+}
+
+.star-rating input:checked ~ label {
+  color: gold;
+}
+
+                    </style>
+                    <div class="col-lg-4 col-xl-3">
+                        <div class="row g-4 fruite">
+                            <div class="col-lg-12">
+                                {% if relatedproducts %}
+                                <h4 class="mb-4">Related products</h4>
+                               
+                                {% for variant in relatedproducts %}
+                                <div class="d-flex align-items-center justify-content-start ">
+                                    <div class="rounded" style="width: 100px; height: 100px; background-color: brown;">
+                                        {% if variant.images.all %}
+                                            <img src="{{ variant.images.all.0.image.url }}" width="100%" height="100%" alt="{{ variant.product.name }}" width="150">
+                                        {% else %}
+                                            <p>No Image Available</p>
+                                        {% endif %}
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-2 ms-2">{{ variant.product.name }}</h6>
+                                        <div class="d-flex mb-2 ms-2">
+                                            <i class="fa fa-star text-secondary"></i>
+                                            <i class="fa fa-star text-secondary"></i>
+                                            <i class="fa fa-star text-secondary"></i>
+                                            <i class="fa fa-star text-secondary"></i>
+                                            <i class="fa fa-star"></i>
+                                        </div>
+                                        <div class=" mb-2 ms-2">
+                                            <h5 class="me-2 custom-font" >₹{{ variant.price }}</h5>
+                                            <h5 class="text-danger custom-font text-decoration-line-through">₹{{ variant.price|add:100 }}</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                                
+                                
+                                <div class="d-flex justify-content-center my-4">
+                                    <a href="#" class="btn border border-secondary px-4 py-3 rounded-pill text-secondary w-100">Vew More</a>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="position-relative">
+                                    <img src="{% static 'user/img/base-bg.jpg' %}" class="img-fluid w-100 rounded" alt="">
+                                    <div class="position-absolute" style="top: 50%; right: 10px; transform: translateY(-50%);">
+                                        <h3 class="text-secondary fw-bold">Latest <br> Gaming <br> Phones</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Single Product End -->
+        <script>
+            function showTab(tab) {
+            // Hide both description and review details
+            document.getElementById('descriptions').style.display = 'none';
+            document.getElementById('reviews').style.display = 'none';
+        
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.information-tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+        
+            // Show selected tab's content and add active class to the selected tab
+            if (tab === 'description') {
+                document.getElementById('descriptions').style.display = 'block';
+            } else {
+                document.getElementById('reviews').style.display = 'block';
+            }
+        
+            // Add active class to the selected tab
+            const activeTab = document.querySelector(`.information-tab[onclick="showTab('${tab}')"]`);
+            activeTab.classList.add('active');
+        }
+        
+        </script>
+{% endblock %}

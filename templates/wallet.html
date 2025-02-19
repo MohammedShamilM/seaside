@@ -1,0 +1,300 @@
+{% extends 'my_account.html' %}
+{% load static %}
+{% block sidebar %}
+    <ul>
+        <li><a href="{% url 'my_account' %}" >Dashboard</a></li>
+        <li><a href="{% url 'my_orders' %}">Orders</a></li>
+        <li><a href="{% url 'wallet' %}" class="active">Wallet</a></li>
+        <li><a href="{% url 'my_address' %}">Address</a></li>
+        <li><a href="{% url 'user_logout' %}">Logout</a></li>
+    </ul>
+{% endblock %}
+{% block maincontent %}
+<style>
+.account-content {
+    padding: 40px;
+    width: calc(100% - 270px);
+}
+
+.account-content h1 {
+    font-size: 2em;
+    margin-bottom: 20px;
+    color: #333;
+}
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.wallet-container {
+    background-color: #ffffff;
+    width: 90%;
+    max-width: 1000px;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    position: relative;
+}
+
+.wallet-header h1 {
+    font-size: 28px;
+    color: #333;
+    font-weight: 600;
+}
+
+.wallet-header p {
+    font-size: 16px;
+    color: #777;
+}
+
+/* Wallet Balance Card */
+.wallet-balance-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffffff;
+    width: 60%;
+    padding: 30px;
+    margin: 0 auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border: solid 2px;
+    border-color: #e08900;
+}
+
+.balance-details h2 {
+    font-size: 24px;
+    color: #000000;
+    margin-bottom: 10px;
+}
+
+.balance-amount {
+    font-size: 32px;
+    font-weight: bold;
+    color: #000000;
+}
+
+.add-money-btn {
+    margin-top: 20px;
+    padding: 12px 24px;
+    font-size: 16px;
+    color: rgb(0, 0, 0);
+    background-color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border: solid 2px;
+    border-color: #e08900;
+}
+
+.add-money-btn:hover {
+    background-color: #e08900;
+    color: white;
+}
+
+/* Transaction History */
+.transaction-history {
+    margin-top: 50px;
+}
+
+.history-header h3 {
+    font-size: 24px;
+    color: #333;
+    font-weight: 600;
+}
+
+.history-tabs {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.history-tab {
+    padding: 10px 20px;
+    font-size: 18px;
+    background-color: #f1f1f1;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    margin: 0 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    border: solid 1px;
+    border-color: #e08900;
+
+}
+
+.history-tab.active {
+    background-color: #e08900;
+    color: white;
+}
+
+
+
+/* History Lists */
+.history-list {
+    margin-top: 30px;
+    display: block;
+    transition: display 0.3s ease;
+}
+
+.history-list table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.history-list th, .history-list td {
+    padding: 10px;
+    text-align: left;
+    font-size: 16px;
+    color: #555;
+}
+
+.history-list th {
+    background-color: #f1f1f1;
+    font-weight: 600;
+}
+
+.history-list tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .wallet-container {
+        padding: 20px;
+    }
+
+    .balance-amount {
+        font-size: 24px;
+    }
+
+    .add-money-btn {
+        width: 100%;
+        margin-top: 20px;
+    }
+
+    .history-tab {
+        width: 45%;
+        margin: 0 5px;
+    }
+}
+
+</style>
+<!-- Main Content -->
+<div class="account-content">
+    <header>
+        <h1>Wallet Details</h1>
+        <a href="{% url 'home' %}"><button class="back-btn" >← Back to Home</button></a>
+    </header>
+    <div class="wallet-container">
+        <!-- Wallet Header -->
+        <div class="wallet-header">
+            <h1>Your Wallet</h1>
+            <p>Manage your balance, add funds, and review your transaction history.</p>
+        </div>
+
+        <!-- Wallet Balance Card -->
+        <div class="wallet-balance-card">
+            <div class="balance-details">
+                <h2>Wallet Balance</h2>
+                <p class="balance-amount">${{wallet.balance}}</p>
+            </div>
+        </div>
+
+        <!-- Debit and Credit History -->
+        <div class="transaction-history">
+            <div class="history-header">
+                <h3>Transaction History</h3>
+            </div>
+            <div class="history-tabs">
+                <button class="history-tab active" onclick="showTab('debit')">Debit History</button>
+                <button class="history-tab" onclick="showTab('credit')">Credit History</button>
+            </div>
+
+            <!-- Debit History List -->
+            <div class="history-list debit" id="debit-history">
+                <table>
+                    {% if debit_transactions %}
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Amount</th>
+                            <th>Balance After</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in debit_transactions %}
+                        <tr>
+                            <td>{{item.created_at|date:"d-m-Y"}}</td>
+                            <td>- ₹{{item.amount}}</td>
+                            <td>₹{{item.balance_after}}</td>
+                            <td>{{item.details}}</td>
+                        </tr>
+                        {% endfor %}                    
+                    </tbody>
+                    {% else %}
+                    <p>No Transaction</p>
+                    {% endif %}
+                </table>
+            </div>
+
+            <!-- Credit History List -->
+            <div class="history-list credit" id="credit-history" style="display: none;">
+                <table>
+                    {% if credit_transactions %}
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Amount</th>
+                            <th>Balance After</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in credit_transactions %}
+                        <tr>
+                            <td>{{item.created_at|date:"d-m-Y"}}</td>
+                            <td>+ ₹{{item.amount}}</td>
+                            <td>₹{{item.balance_after}}</td>
+                            <td>{{item.details}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    {% else %}
+                    <p>No Transaction</p>
+                    {% endif %}
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function showTab(tab) {
+    // Hide both debit and credit history
+    document.getElementById('debit-history').style.display = 'none';
+    document.getElementById('credit-history').style.display = 'none';
+
+    // Remove active class from all tabs
+    const tabs = document.querySelectorAll('.history-tab');
+    tabs.forEach(tab => tab.classList.remove('active'));
+
+    // Show selected tab's content and add active class to the selected tab
+    if (tab === 'debit') {
+        document.getElementById('debit-history').style.display = 'block';
+    } else {
+        document.getElementById('credit-history').style.display = 'block';
+    }
+
+    // Add active class to the selected tab
+    const activeTab = document.querySelector(`.history-tab[onclick="showTab('${tab}')"]`);
+    activeTab.classList.add('active');
+}
+
+</script>
+{% endblock %}

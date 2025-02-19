@@ -1,0 +1,69 @@
+{% extends 'user-base.html' %}
+{% block maincontent %}
+<div class="container-fluid pb-5">
+    <div class="container pb-5" style="text-align: center;">
+        <div>
+            <h1 class="fw-bold">Wishlist</h1>
+        </div>
+        <div class="table-responsive">
+            {% if Wishlist_Item %}
+
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">Product</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Handle</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    {% for item in Wishlist_Item %}
+                    
+                    <tr>
+                        
+                        <th scope="row">
+                            <a href="{% url 'products_details' item.product.id %}">
+                                <div class="d-flex align-items-center">
+                                    <img src="{{item.image.url}}" class="img-fluid " style="width: 80px; height: 80px;" alt="">
+                                </div>
+                            </a>
+                        </th>
+                        
+                        <td>
+                            <a href="{% url 'products_details' item.product.id %}">
+                                <p class="mb-0 mt-4">{{item.product.name}}</p>
+                                {% if item.variant.stock <= 0 %}
+                                <h6 class="text-danger"  style="font-size: smaller;">0 stocks available</h6>
+                                {% endif %}
+                            </a>
+                        </td>
+                        <td>
+                            <a href="{% url 'products_details' item.product.id %}">
+                                <p class="mb-0 mt-4">₹{{item.variant.price}}</p>
+                            </a>
+                        </td>
+                        
+                        <td>
+                            <a href="{% url 'remove_from_wishlist' item.variant.id %}">
+                                <button class="btn btn-md rounded-circle bg-light border mt-4" >
+                                <i class="fa fa-times text-danger"></i>
+                                </button>
+                            </a>
+                        </td>
+                    </tr>
+                    
+                    {% endfor %}
+                    
+                </tbody>
+            </table>
+        </div>
+        
+        {% else %}
+        <h5>No  items here</p>
+        {% endif %}
+    </div>
+</div>
+<!-- Cart Page End -->
+
+{%  endblock %}

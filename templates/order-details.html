@@ -1,0 +1,274 @@
+{% extends 'my_account.html' %}
+{% load static %}
+{% block sidebar %}
+    <ul>
+        <li><a href="{% url 'my_account' %}" >Dashboard</a></li>
+        <li><a href="{% url 'my_orders' %}" class="active">Orders</a></li>
+        <li><a href="{% url 'wallet' %}">Wallet</a></li>
+        <li><a href="{% url 'my_address' %}">Address</a></li>
+        <li><a href="{% url 'user_logout' %}">Logout</a></li>
+    </ul>
+{% endblock %}
+{% block maincontent %}
+<style>
+.container {
+width: 80%;
+margin: 20px auto;
+background: #fff;
+border-radius: 8px;
+box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+padding: 20px;
+}
+
+/* Header */
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+}
+
+.order-header h1 {
+    font-size: 24px;
+    margin: 0;
+}
+
+.order-header .back-btn {
+    text-decoration: none;
+    color: #ff9900;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+/* Sections */
+.order-details section {
+    margin-bottom: 20px;
+}
+
+.order-details h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: #555;
+}
+
+.order-details ul {
+    list-style: none;
+    padding: 0;
+}
+
+.order-details ul li {
+    font-size: 16px;
+    margin-bottom: 8px;
+}
+
+/* Status Section */
+.order-status .status {
+    font-size: 16px;
+    color: orange;
+    font-weight: bold;
+}
+
+/* Price Details */
+.order-price ul li {
+    display: flex;
+    justify-content: space-between;
+    font-size: 16px;
+}
+
+.order-price ul li strong {
+    font-size: 18px;
+    color: #000;
+}
+
+/* Buttons */
+.btn {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.cancel-btn {
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: rgb(255, 255, 255);
+    color: black;
+    border: solid 1px;
+    border-color: #ff9900;
+}
+.cancel-btn:hover{
+    background-color: red;
+    color: white;
+}
+
+.return-btn {
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: rgb(255, 255, 255);
+    color: black;
+    border: solid 1px;
+    border-color: #ff9900;
+}
+.return-btn:hover{
+    background-color: #e08900;
+    color: white;
+}
+.download-btn {
+    display: inline-block;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: rgb(255, 255, 255);
+    color: black;
+    border: solid 1px;
+    border-color: #ff9900;
+    text-decoration: none;
+}
+.download-btn:hover{
+    background-color: #e08900;
+    color: white;
+    border: solid 1px;
+    border-color: #000000;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+
+    .order-header h1 {
+        font-size: 20px;
+    }
+
+    .order-details h2 {
+        font-size: 18px;
+    }
+
+    .btn {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
+</style>
+
+<div class="container">
+    <header class="order-header">
+        <h1>Order Details     #{{order.order_id}}</h1>
+        <a href="{% url 'my_orders' %}" class="back-btn">Back to Orders</a>
+    </header>
+    
+    <div class="order-details">
+        <!-- Order Summary -->
+        <section class="order-summary">
+          
+            {% for item in order_items %}
+            
+            <ul>
+                <li><h3>Product: {{item.product}}</h3></li>
+                <li>Quantity: {{item.quantity}}</li>
+                {% if item.status  == 'Cancelled'  and order.payment_method != 'Cash On Delivery' %}
+                <li>Item cancelled and payment refunded</li>
+                {% elif item.status  == 'Cancelled'  and order.payment_method == 'Cash On Delivery' %}
+                <li style="color: red;">Item cancelled</li>
+                {% elif item.status == 'Requested Return' %}
+                <li>Requested to Return the item</li>
+                {% elif item.status == 'Returned' %}
+                <li>Item Returned and payment refunded</li>
+                 {% endif %}
+            </ul>
+                
+                {% if  order.order_status == 'Order Pending' or order.order_status == 'Order confirmed' %}
+                {% if item.status == 'Order Pending' or item.status == 'Order confirmed' %}
+                {% if order.payment_method != 'Razorpay' %}
+                <a href="{% url 'cancel_order' item.id %}"><button class="btn cancel-btn">Cancel Order</button></a>
+                {% elif order.payment_method == 'Razorpay' and order.payment_status == 'Success' %}
+                <a href="{% url 'cancel_order' item.id %}"><button class="btn cancel-btn">Cancel Order</button></a>
+                {% endif %}
+                {% endif %}
+                {% elif order.order_status == 'Delivered' and item.status == 'Delivered' %}
+                <a href="{% url 'request_return' item.id %}"><button class="btn cancel-btn">Return</button></a>
+                {% endif %}
+            {% endfor %}
+        </section>
+        <!-- Order_Status -->
+        <section class="order-status">
+            <h2>Order Status</h2>
+            <p class="status" {% if order.order_status == "Delivered" %} style="color: green;" {% endif %}>{{order.order_status}}</p>
+        </section>
+
+        <!-- Payment_Status -->
+        <section class="order-status">
+            <h2>Payment Status</h2>
+            <p class="status" {% if order.payment_status == "Failure" %} style="color: red;" {% endif %}>{{order.payment_status}}</p>
+            {% if order.payment_status == 'Pending' and order.payment_method == 'Razorpay' %}
+            <button class="download-btn">Retry payment</button>
+            {% endif %}
+        </section>
+        <!-- Payment_Method -->
+        <section class="order-status">
+            <h2>Payment Method</h2>
+            <p class="status">{{order.payment_method}}</p>
+        </section>
+
+        <!-- Address -->
+        <section class="order-address">
+            <h2>Shipping Address</h2>
+            <p>{{order.user}}</p>
+            <p>{{order.shipping_address}}</p>
+            <p>{{order.shipping_address.city}}</p>
+            <p>{{order.shipping_address.state}}</p>
+            <p>{{order.user.phone_number}}</p>
+        </section>
+
+        
+        <!-- Price -->
+        <section class="order-price">
+            <h2>Price Details</h2>
+            {% if order.order_status == 'Cancelled' or order.order_status == 'Returned'  %}
+            <p>Order {{order.order_status}}</p>
+            {% else %}
+            <ul>
+                <li>Subtotal :₹{{order.total_price}}</li>
+                
+                {% if  order.discount_price %}
+                <li>Discount: {{order.discount}}%</li>
+                
+                <li><strong>Total:₹{{order.discount_price}}</strong></li>
+                {% else %}
+                <!-- <li>Shipping: $20</li> -->
+                <li><strong>Total:₹{{order.total_price}}</strong></li>
+                {% endif %}
+            </ul>
+            {% endif %}
+        </section>
+
+        <!-- Cancel/Return -->
+        <!-- <section class="order-actions">
+            <h2>Actions</h2>
+            <form action="{% url 'cancel_order' order.id %}" method="post">
+                {% csrf_token %}
+                <button class="btn cancel-btn">Cancel Order</button>
+            </form>
+            
+            <button class="btn return-btn">Return Order</button>
+        </section> -->
+
+        <!-- Invoice -->
+        <section class="order-invoice">
+            <h2>Invoice</h2>
+            <a href="{% url 'download_invoice' order.id %}" class="download-btn">Download Invoice</a>
+        </section>
+
+        <!-- Track -->
+        <!-- <section class="order-invoice">
+            <h2>Track</h2>
+            <a href="#" class="download-btn">Track order</a>
+        </section> -->
+    </div>
+</div>
+{% endblock %}

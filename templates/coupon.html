@@ -1,0 +1,183 @@
+{% extends 'admin-base.html' %}
+{% load static %}
+{% block sidebar %}
+    <ul >
+        <li ><a href="{% url 'admin_dash' %}" ><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+        <li><a href="{% url 'admin_order_list' %}"><i class="fas fa-shopping-cart"></i> Orders</a></li>
+        <li><a href="{% url 'admin_products' %}"><i class="fas fa-box-open"></i> Products</a></li>
+        <li><a href="{% url 'admin_categories' %}"><i class="fas fa-tags"></i> Categories</a></li>
+        <li><a href="{% url 'coupons' %}" class="active"><i class="fas fa-percent" ></i> Coupons</a></li>
+        <!-- <li><a href="#"><i class="fas fa-bullhorn"></i> Offers</a></li> -->
+        <li><a href="#"><i class="fas fa-comments"></i> Reviews</a></li>
+        <li><a href="{% url 'user_list' %}"><i class="fas fa-users"></i> Customers</a></li>
+    </ul>
+{% endblock %}
+{% block maincontent %}
+<style>
+    header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.Add-coupon-btn {
+    background-color: orange ;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.coupon-list {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.coupon-list h2 {
+    margin-bottom: 15px;
+    color: #333;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table th, table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+table th {
+    background-color: #f4f5f7;
+    color: #333;
+}
+.Inactive-btn,.Active-btn,.edit-btn {
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: rgb(255, 255, 255);
+    color: black;
+    border: solid 1px;
+    border-color: #ff9900;
+}
+.edit-btn:hover{
+    background-color: #ff9900;
+    color: white;
+}
+.Inactive-btn:hover{
+    background-color: red;
+    color: white;
+}
+.Active-btn:hover {
+    background-color: green;
+    color: #fff;
+}
+
+.add-coupon {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.add-coupon h2 {
+    margin-bottom: 15px;
+    color: #333;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+form label {
+    font-weight: bold;
+    color: #555;
+}
+
+form input, form textarea {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .content {
+        gap: 20px;
+    }
+
+    table th, table td {
+        padding: 8px;
+    }
+
+    
+}
+</style>
+<header>
+    <h1>Coupon Management</h1>
+    <a href="{% url 'add_coupon' %}"><button class="Add-coupon-btn">+ Add Coupon</button></a>
+</header>
+<section class="content">
+    <!-- Coupon Table -->
+    <div class="coupon-list">
+        <h2>Existing Coupons</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Coupon Code</th>
+                    <th>Discount (%)</th>
+                    <th>Min_amount</th>
+                    <th>Expiration Date</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for coupon in coupons %}
+                <tr>
+                    <td>{{coupon.code}}</td>
+                    <td>{{coupon.discount}}</td>
+                    <td>{{coupon.min_order_amount}}</td>
+                    <td>{{coupon.expiration_date|date:"d-m-Y"}}</td>
+                    <td>{{coupon.details}}</td>
+                    {% if coupon.is_active %}
+                    <td style="color: green;">Active</td>
+                    {% else %}
+                    <td style="color: red;">Inactive</td>
+                    {% endif %}
+                    <td>
+                        <a href="{% url 'edit_coupon' coupon.id %}"><button class="edit-btn">Edit</button></a>
+                        {% if coupon.is_active %}
+                        <a href="{% url 'toggle-coupon-status' coupon.id %}"><button class="Inactive-btn">Inactive</button></a>
+                        {% else %}
+                        <a href="{% url 'toggle-coupon-status' coupon.id %}"><button class="Active-btn">Active</button></a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+                <!-- Add more rows as needed -->
+            </tbody>
+        </table>
+    </div>
+
+</section>
+
+
+{% endblock %}

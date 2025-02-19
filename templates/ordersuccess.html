@@ -1,0 +1,47 @@
+{% extends 'user-base.html' %}
+{% load static %}
+{% block maincontent %}
+<link rel="stylesheet" href="{% static 'user/css/ordersuccess.css' %}">
+
+<div class="success-page " >
+    <div class="content">
+        <div class="icon">
+            <!-- <img src="success-icon.png" alt="Order Success" class="success-icon"> -->
+        </div>
+        <h1>Order Placed Successfully!</h1>
+        {% if error %}
+        <h1>{{error}}</h1>
+        {% endif %}
+        <p>Your order has been placed and is being processed. We will notify you once it's shipped.</p>
+
+        <div class="order-details">
+            <h2>Delivery Details</h2>
+            <ul>
+                <li><strong>Delivery Address:</strong> {{order.shipping_address}}</li>
+                <li><strong>Expected Delivery:</strong> {{order.estimated_delivery_date}}</li>
+                <li><strong>Payment Method:</strong> {{order.payment_method}}</li>
+            </ul>
+        </div>
+
+        <div class="order-summary">
+            <h3>Order Summary{{totalprice}}</h3>
+            <ul>
+                <li><strong>Total Price:</strong> ₹{{order.total_price}}</li>
+                
+                {% if order.discount == 0 %}
+                <li><strong>Discount:</strong>No discounts applied</li>
+                <li><strong>Final Price:</strong> ₹{{order.total_price}}</li>
+                {% else %}
+                <li><strong>Discount:</strong>{{order.discount}}%</li>
+                <li><strong>Final Price:</strong> ₹{{order.discount_price}}</li>
+                {% endif %}
+            </ul>
+        </div>
+
+       
+        <div class="actions">
+            <a href="{% url 'home' %}" class="btn shop-btn text-dark">Continue Shopping</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

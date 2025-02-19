@@ -1,0 +1,148 @@
+/* Basic Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body Styling */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f6f9;
+    color: #333;
+    transition: margin-left 0.3s ease;
+}
+
+/* Hamburger Menu Styles */
+.hamburger {
+    display: none; /* Hidden on larger screens */
+    font-size: 30px;
+    cursor: pointer;
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1100;
+    color: #555;
+    transition: color 0.3s ease;
+}
+
+.hamburger:hover {
+    color: #6a5acd;
+}
+.hamburger {
+    /* Existing styles */
+    outline: none;
+}
+
+.hamburger:focus {
+    outline: 2px solid #6a5acd;
+}
+
+
+/* Sidebar Styles */
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 220px;
+    height: 100vh;
+    background-color: #ffffff;
+    box-shadow: 2px 0px 10px rgba(0, 0, 0, 0.1); /* Sidebar shadow */
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+    padding-top: 40px;
+    transition: transform 0.3s ease;
+    z-index: 1000;
+}
+
+.sidebar h2 {
+    font-size: 24px;
+    color: #000000;
+    font-weight: bold;
+    margin-bottom: 30px;
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+    width: 100%;
+}
+
+.sidebar ul li {
+    width: 100%;
+}
+
+.sidebar ul li a {
+    display: block;
+    width: 100%;
+    padding: 15px 20px;
+    text-decoration: none;
+    color: #555;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    border-left: 3px solid transparent; /* Highlight effect */
+    position: relative;
+    padding-left: 40px; /* Space for icon */
+}
+.sidebar ul li a i {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: #797979;
+}
+.sidebar ul li a:hover {
+    background-color: #e0e4f7;
+    color: #6a5acd;
+    border-left: 3px solid #6a5acd;
+    box-shadow: inset 0px 0px 5px rgba(0, 0, 0, 0.1); /* Hover shadow */
+    border-radius: 8px 0 0 8px;
+}
+
+.sidebar ul li a.active {
+    background-color: #e0e4f7;
+    color: #6a5acd;
+    border-left: 3px solid #6a5acd;
+    font-weight: bold;
+}
+
+.sidebar ul li a:hover::before {
+    color: #6a5acd;
+}
+
+/* Main Content Styling */
+.main-content {
+    margin-left: 220px; /* Width of the sidebar */
+    padding: 20px;
+    transition: margin-left 0.3s ease;
+}
+
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    /* Sidebar hidden by default on small screens */
+    .sidebar {
+        transform: translateX(-100%);
+        width: 220px;
+    }
+
+    /* Sidebar visible when open */
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    /* Main content full width */
+    .main-content {
+        margin-left: 0;
+    }
+
+    /* Show hamburger menu */
+    .hamburger {
+        display: block;
+    }
+}
+
+

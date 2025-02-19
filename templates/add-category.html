@@ -1,0 +1,55 @@
+{% load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Category</title>
+    <link rel="stylesheet" href="{% static 'admin/css/add-category.css' %}">
+</head>
+<body>
+    
+    <div class="main-content">
+        <header style="justify-content: center;">
+            <h1>Add New Category</h1>
+        </header>
+        <section class="add-product">
+            <div class="card">
+                {% if messages %}
+                {% for message in messages %}
+                <h5 style="color: #ff0000;">{{ message }}</h5>
+                {% endfor %}
+                 {% endif %}
+                <form id="productForm" {% if Category %} action="{% url 'edit_category' Category.id %}" {% else %} action="{% url 'add_category' %}" {% endif %} method="post" enctype="multipart/form-data" >
+                    {% csrf_token %}
+                    
+                    
+                    <div class="form-group">
+                        <label for="categoryName">Category Name</label>
+                        <input type="text" id="categoryName" {% if Category %} value="{{Category.name}}" {% endif %} name="categoryName" required>
+                    </div>
+                    
+                    
+                    <div class="form-group">
+                        <label for="productDescription">Description</label>
+                        <input name="categoryDescription"  type="text" class="form-control" {% if Category %} value="{{Category.description}}" {% endif %}  placeholder="write category description" id="floatingTextarea2" >
+                        </input>
+                    </div>
+                    
+                    
+                    {% if Category %}
+                    <button type="submit" class="submit-btn">Submit</button>
+                    {% else %}
+                    <button type="submit" class="submit-btn">Add Category</button>
+                    {% endif %}
+                    <p></p>
+                    
+
+                </form>
+                <a href="{% url 'admin_categories' %}"><button class="back-btn">Back</button></a>
+                
+            </div>
+        </section>
+    </div>
+</body>
+</html>

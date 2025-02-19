@@ -1,0 +1,99 @@
+{% extends 'my_account.html' %}
+{% load static %}
+{% block sidebar %}
+    <ul>
+        <li><a href="{% url 'my_account' %}">Dashboard</a></li>
+        <li><a href="{% url 'my_orders' %}" class="active">Orders</a></li>
+        <li><a href="{% url 'wallet' %}">Wallet</a></li>
+        <li><a href="{% url 'my_address' %}">Address</a></li>
+        <li><a href="{% url 'user_logout' %}">Logout</a></li>
+    </ul>
+{% endblock %}
+{% block maincontent %}
+<link rel="stylesheet" href="{% static 'user/css/order-list.css' %}">
+
+<!-- Main Content -->
+<div class="account-content">
+    <header>
+        <h1>My Orders</h1>
+        <form action="{% url 'search_orders' %}" method="get">
+            <input type="text" name="query" id="searchInput"  placeholder="Search Orders">
+        </form>
+    </header>
+    
+    <div class="order-list">
+        <!-- Sample Order -->
+         {% if none %}
+         <p>No orders based on your search</p>
+         {% endif %}
+         {% if  user_orders%}
+         {% for order in user_orders %}
+
+            <div class="order-item">
+                <div class="order-info">
+                    <span class="order-id">Order ID: #{{order.order_id}}</span>
+                    <span class="order-date">Date: {{order.created_at|date:"d-m-Y"}}</span>
+                </div>
+                <div class="order-status">
+                    <span class="status">Status: {{order.order_status}}</span>
+                    <span class="total">Total: ${{order.total_price }}</span>
+                </div>
+                <a href="{% url 'order_details' order.id %}"><button class="view-details">View Details</button></a>
+            </div>
+            {% endfor %}
+            {% elif result %}
+            {% for order in result %}
+
+            <div class="order-item">
+                <div class="order-info">
+                    <span class="order-id">Order ID: #{{order.order_id}}</span>
+                    <span class="order-date">Date: {{order.created_at|date:"d-m-Y"}}</span>
+                </div>
+                <div class="order-status">
+                    <span class="status">Status: {{order.order_status}}</span>
+                    <span class="total">Total: ${{order.total_price}}</span>
+                </div>
+                <a href="{% url 'order_details' order.id %}"><button class="view-details">View Details</button></a>
+            </div>
+            {% endfor %}
+            {% endif %}
+            <style>
+                .pagination {
+  display: flex;
+  gap: 10px;
+  margin: 10px 0;
+}
+.pagination a {
+  padding: 5px 10px;
+  border: 1px solid #ff9900;
+  text-decoration: none;
+  background-color: rgb(255, 255, 255);
+  color: black;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.pagination span {
+  padding: 5px;
+}
+
+            </style>
+            <div class="pagination">
+                {% if user_orders.has_previous %}
+                  <a href="?page=1" >First</a>
+                  <a href="?page={{ user_orders.previous_page_number }}" >Previous</a>
+                {% endif %}
+              
+                <span>Page {{ user_orders.number }} of {{ user_orders.paginator.num_pages }}</span>
+              
+                {% if user_orders.has_next %}
+                  <a href="?page={{ user_orders.next_page_number }}">Next</a>
+                  <a href="?page={{ user_orders.paginator.num_pages }}" >Last</a>
+                {% endif %}
+              </div>
+
+        
+    </div>
+</div>
+{% endblock %}

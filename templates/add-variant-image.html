@@ -1,0 +1,131 @@
+{% load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Category</title>
+    <link rel="stylesheet" href="{% static 'admin/css/add-product.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+
+</head>
+<body>
+        <style>
+        .img-wrapper {
+            display: inline-block;
+            text-align: center;
+            margin: 10px;
+        }
+        .crop-button {
+            display: block;
+            margin-top: 5px;
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background-color: #6a5acd;
+            color: white;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+    
+    <div class="main-content">
+        <header style="justify-content: center;">
+            <h1>Add Images</h1>
+        </header>
+        <section class="add-variant-image">
+            <div class="card">
+                
+                <form id="variantImageForm" method="post" enctype="multipart/form-data" action="{% url 'add_variant_image' variant_id=variant.id %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="variantImage">Upload Images</label>
+                        <input type="file" id="variantImage" name="images" accept="image/*" multiple>
+                    </div>
+                    <div id="imagePreviewContainer"></div>
+                    <!-- <button type="button" id="submitImagesButton" class="submit-btn">Submit</button> -->
+                </form>
+                <a href="{% url 'admin_products' %}"><button class="back-btn">Back</button></a>
+            </div>
+        </section>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+    const imageInput = document.getElementById("variantImage");
+    const previewContainer = document.getElementById("imagePreviewContainer");
+    const submitButton = document.getElementById("submitImagesButton");
+
+    // Clear the preview container
+    function clearPreview() {
+        previewContainer.innerHTML = "";
+    }
+
+    // Preview selected images
+    function previewImages() {
+        const files = imageInput.files;
+        clearPreview();
+
+        Array.from(files).forEach((file, index) => {
+            if (!file.type.startsWith("image/")) {
+                alert(`File "${file.name}" is not a valid image.`);
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const imgWrapper = document.createElement("div");
+                imgWrapper.classList.add("img-wrapper");
+
+                const img = document.createElement("img");
+                img.src = e.target.result;
+                img.alt = `Image Preview ${index + 1}`;
+                img.style.width = "100px";
+                img.style.height = "100px";
+                img.style.margin = "10px";
+                imgWrapper.appendChild(img);
+
+                // Add a cropping button
+                const cropButton = document.createElement("button");
+                cropButton.textContent = "Crop";
+                cropButton.classList.add("crop-button");
+                cropButton.addEventListener("click", function () {
+                    handleCrop(img, index);
+                });
+                imgWrapper.appendChild(cropButton);
+
+                previewContainer.appendChild(imgWrapper);
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    // Handle cropping functionality
+    function handleCrop(imageElement, index) {
+        alert(`Cropping functionality for Image ${index + 1} can be implemented here.`);
+        // You can integrate a cropping library like Cropper.js here for actual cropping.
+    }
+
+    // Validate and submit the form
+    function validateAndSubmitForm() {
+        const files = imageInput.files;
+        if (files.length === 0) {
+            alert("Please select at least one image.");
+            return;
+        }
+
+        // Add additional validations here if needed
+        document.getElementById("variantImageForm").submit();
+    }
+
+    // Event Listeners
+    imageInput.addEventListener("change", previewImages);
+    submitButton.addEventListener("click", validateAndSubmitForm);
+});
+
+    </script>
+        
+        
+</body>
+</html>

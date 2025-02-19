@@ -1,0 +1,169 @@
+{% extends 'admin-base.html' %}
+{% load static %}
+{% block title %}
+    <title>Products-details</title>
+{% endblock %}
+{% block customcss %}
+    <!-- Customized Bootstrap Stylesheet -->
+     <link rel="stylesheet" href="{% static 'user/css/bootstrap.css' %}">
+     <link rel="stylesheet" href="{% static 'user/css/bootstrap.css' %}">
+
+{% endblock %}
+{% block sidebar %}
+    <ul >
+        <li ><a href="{% url 'admin_dash' %}" ><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+        <li><a href="{% url 'admin_order_list' %}"><i class="fas fa-shopping-cart"></i> Orders</a></li>
+        <li><a href="{% url 'admin_products' %}" class="active"><i class="fas fa-box-open"></i> Products</a></li>
+        <li><a href="{% url 'admin_categories' %}"><i class="fas fa-tags"></i> Categories</a></li>
+        <li><a href="{% url 'coupons' %}"><i class="fas fa-percent" ></i> Coupons</a></li>
+        <!-- <li><a href="#"><i class="fas fa-bullhorn"></i> Offers</a></li> -->
+        <li><a href="#"><i class="fas fa-comments"></i> Reviews</a></li>
+        <li><a href="{% url 'user_list' %}"><i class="fas fa-users"></i> Customers</a></li>
+    </ul>
+{% endblock %}
+{% block maincontent%}
+<style>
+    .edit-btn{
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+    }
+    .edit-btn {
+        background-color: #6a5acd;
+        color: #fff;
+    }
+    .edit-btn{
+        padding: 5px 10px;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+</style>
+
+<!-- Single Product Start -->
+<div class="container-fluid py-5 mt-5">
+    <div class="container py-5">
+        <div class="row g-4 mb-5">
+            {% if variants %}
+            <div class="col-lg-8 col-xl-9">
+                <div class="row g-4">
+                    <div class="col-lg-6">
+                        {% if variants.images.all %}
+                        <div class="border rounded">
+                            <a href="#">
+                                <img id="mainImage" style="width: 100%;" src="{{ variants.images.all.0.image.url }}" class="img-fluid rounded" alt="Image">
+                            </a>
+                        </div>
+                        <div >
+                            {% for image in variants.images.all %}
+                            <img src="{{image.image.url }}" style="width: 24%;" onclick="document.getElementById('mainImage').src = '{{ image.image.url }}'" class="img-fluid rounded" alt="Image">                                  
+                            {% endfor %}
+                        {% endif %}
+                            <br>
+                            <h6>color:</h6>
+                            <a href="#" class="btn border border-secondary rounded-pill px-4 py-2 mb-4 text-secondary">{{variants.color}}</a>
+                            <h6>storage:</h6>
+                            <a href="#" class="btn border border-secondary rounded-pill px-4 py-2 mb-4 text-secondary">{{variants.storage}}</a>
+                            <h6>RAM:</h6>
+                            <a href="#" class="btn border border-secondary rounded-pill px-4 py-2 mb-4 text-secondary">{{variants.RAM}}</a>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <h4 class="fw-bold mb-3">{{variants.product.name}}</h4>
+                        <p class="mb-3">Category: {{variants.product.category.name}}</p>
+                        <h5 class="fw-bold mb-3">₹{{variants.price}}</h5>
+                        <p class="mb-4">{{variants.product.description}}</p>
+                        <button class="edit-btn">
+                        
+                            <a href="{% url 'add_variant' product_id=variants.product.id %}" style="text-decoration: none; color: white;">Add Variant</a>
+                        </button> 
+                        
+                        
+                         
+                        <br>
+                        <br>
+                        <button class="edit-btn">
+                        
+                            <a href="{% url 'edit_product' product_id=variants.product.id  variant_id=variants.id %}" style="text-decoration: none; color: white;">Edit Product</a>
+                        </button>  
+
+                        
+                    </div>
+                    <div class="col-lg-12">
+                            <div class="nav nav-tabs mb-3 border-secondary">
+                                <p class="nav-link text-dark"><strong>Description</strong></p>
+                                
+                            </div>
+                        <div class="tab-content mb-5">
+                            <div class="tab-pane active" id="nav-about" role="tabpanel" aria-labelledby="nav-about-tab">
+                                <p>{{variants.product.description}}</p>
+                                
+                                <div class="px-2">
+                                    <div class="row g-4">
+                                        <div class="col-6">
+                                            <div class="row bg-light align-items-center  justify-content-center py-2">
+                                                <div class="col-6">
+                                                    <p class="mb-0">Model Number</p>
+                                                </div>
+                                                <div class="col-6">
+                                                    <p class="mb-0">MYEF3HN/A</p>
+                                                </div>
+                                            </div>
+                                            <div class="row  align-items-center justify-content-center py-2">
+                                                <div class="col-6">
+                                                    <p class="mb-0">Model Name</p>
+                                                </div>
+                                                <div class="col-6">
+                                                    <p class="mb-0">iPhone 16</p>
+                                                </div>
+                                            </div>
+                                            <div class="row bg-light  align-items-center justify-content-center py-2">
+                                                <div class="col-6">
+                                                    <p class="mb-0">Color</p>
+                                                </div>
+                                                <div class="col-6">
+                                                    <p class="mb-0">Black</p>
+                                                </div>
+                                            </div>
+                                            <div class="row  align-items-center justify-content-center py-2">
+                                                <div class="col-6">
+                                                    <p class="mb-0">SIM Type</p>
+                                                </div>
+                                                <div class="col-6">
+                                                    <p class="mb-0">Dual Sim(Nano + eSIM)</p>
+                                                </div>
+                                            </div>
+                                            <div class="row bg-light  align-items-center justify-content-center py-2">
+                                                <div class="col-6">
+                                                    <p class="mb-0">Hybrid Sim Slot</p>
+                                                </div>
+                                                <div class="col-6">
+                                                    <p class="mb-0">No</p>
+                                                </div>
+                                            </div>
+                                            <div class="row bg-light  align-items-center justify-content-center py-2">
+                                                <div class="col-6">
+                                                    <p class="mb-0">Sound Enhancements</p>
+                                                </div>
+                                                <div class="col-6">
+                                                    <p class="mb-0">Built-in Stereo Speaker</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        
+    </div>
+</div>
+<!-- Single Product End -->
+{% endblock %}

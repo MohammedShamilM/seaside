@@ -1,0 +1,166 @@
+/* General Styles */
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+
+/* Success Page Layout */
+.success-page {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 40px;
+    text-align: center;
+    background-color: #f9f9f9;
+    margin-top: 400px;
+    margin-bottom: 400px;
+}
+
+.content {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 800px;
+    padding: 30px;
+}
+
+/* Success Icon */
+.success-icon {
+    width: 80px;
+    margin-bottom: 20px;
+}
+
+/* Success Title */
+h1 {
+    font-size: 32px;
+    color: #4CAF50;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+/* Success Message */
+p {
+    font-size: 18px;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+/* Order Details */
+.order-details {
+    text-align: left;
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+
+.order-details h2 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.order-details ul {
+    list-style: none;
+    padding: 0;
+}
+
+.order-details ul li {
+    margin-bottom: 10px;
+    color: #777;
+}
+
+.order-summary {
+    text-align: left;
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+
+.order-summary h3 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.order-summary ul {
+    list-style: none;
+    padding: 0;
+}
+
+.order-summary ul li {
+    margin-bottom: 10px;
+    color: #777;
+}
+
+.order-summary ul li strong {
+    color: #333;
+}
+
+/* Action Buttons */
+.actions {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.actions .btn {
+    padding: 12px 24px;
+    font-size: 16px;
+    border-radius: 5px;
+    color: white;
+    text-decoration: none;
+    text-align: center;
+    width: 100%;
+    transition: all 0.3s ease-in-out;
+}
+
+.track-btn {
+    background-color: #4CAF50;
+}
+
+.shop-btn {
+    background-color: #ff9900;
+}
+
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .actions {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .actions .btn {
+        width: 100%;
+    }
+
+    .order-details ul li,
+    .order-summary ul li {
+        font-size: 14px;
+    }
+
+    h1 {
+        font-size: 28px;
+    }
+
+    p {
+        font-size: 16px;
+    }
+
+    .order-details h2,
+    .order-summary h3 {
+        font-size: 20px;
+    }
+}

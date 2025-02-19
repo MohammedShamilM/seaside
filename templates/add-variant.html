@@ -1,0 +1,75 @@
+{% load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Category</title>
+    <link rel="stylesheet" href="{% static 'admin/css/add-product.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+
+</head>
+<body>
+    
+    <div class="main-content">
+        <header style="justify-content: center;">
+            <h1>Add  Variant</h1>
+        </header>
+        <section class="add-product">
+            <div class="card">
+              {% if messages %}
+                {% for message in messages %}
+                <h5 style="color: #ff0000;">{{ message }}</h5>
+                {% endfor %}
+                 {% endif %}
+                    <form  method="post" enctype="multipart/form-data" >
+                        {% csrf_token %}
+                        <div class="form-step active">
+                          <h3>Step 2: Add Variant Details</h3>
+
+                          <div class="form-group">
+                            <label for="color"  >Color</label>
+                            <input type="text" {% if Variant %} value="{{Variant.color}}" {% endif %} id="color" name="color" >
+                          </div>
+
+                          <div class="form-group">
+                            <label for="storage">Storage</label>
+                            <input type="text" {% if Variant %} value="{{Variant.storage}}" {% endif %} id="storage" name="storage">
+                          </div>
+
+                          <div class="form-group">
+                            <label for="RAM">RAM</label>
+                            <input type="text" {% if Variant %} value="{{Variant.RAM}}" {% endif %} id="RAM" name="RAM" >
+                          </div>
+
+                          <div class="form-group">
+                            <label for="variantPrice">Price</label>
+                            <input type="number" {% if Variant %} value="{{Variant.price}}" {% endif %} id="variantPrice" name="price" required>
+                          </div>
+
+                          <div class="form-group">
+                            <label for="variantStock">Stocks</label>
+                            <input type="number" {% if Variant %} value="{{Variant.stock}}" {% endif %} id="variantStock" name="stock" required>
+                          </div>
+
+                          <div class="form-group">
+                            <label for="variantOffer">Offer</label>
+                            <input type="text" {% if Variant %} value="{{Variant.offer}}"{% endif %} id="variantOffer" name="Offer">
+                          </div>
+
+                          
+                        
+                        
+                          <button type="submit" class="submit-btn">Submit</button>
+                        </div><br>
+                </form>        
+                <!-- <a href="{% url 'admin_products' %}"><button class="back-btn" >Back</button> </a>        -->
+            </div>
+        </section>
+    </div>
+    
+        
+        
+</body>
+</html>

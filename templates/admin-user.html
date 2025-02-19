@@ -1,0 +1,161 @@
+{% extends 'admin-base.html' %}
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {% block sidebar %}
+        <ul >
+            <li ><a href="{% url 'admin_dash' %}"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+            <li><a href="{% url 'admin_order_list' %}"><i class="fas fa-shopping-cart"></i> Orders</a></li>
+            <li><a href="{% url 'admin_products' %}"><i class="fas fa-box-open"></i> Products</a></li>
+            <li><a href="{% url 'admin_categories' %}"><i class="fas fa-tags"></i> Categories</a></li>
+            <li><a href="{% url 'coupons' %}"><i class="fas fa-percent" ></i> Coupons</a></li>
+            <!-- <li><a href="#"><i class="fas fa-bullhorn"></i> Offers</a></li> -->
+            <li><a href="#"><i class="fas fa-comments"></i> Reviews</a></li>
+            <li><a href="{% url 'user_list' %}" class="active"><i class="fas fa-users"></i> Customers</a></li>
+        </ul>
+        {% endblock %}
+    {% block maincontent %}
+    <style>
+        header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.search-container {
+    display: flex;
+    align-items: center;
+}
+
+#search {
+    padding: 8px;
+    width: 250px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+.back-btn {
+    background-color: #6a5acd;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 12px;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.customer-list {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.customer-list h2 {
+    margin-bottom: 15px;
+    color: #333;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table th, table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+table th {
+    background-color: #f4f5f7;
+    color: #333;
+}
+
+.view-btn,.active-btn, .deactive-btn {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.view-btn {
+    background-color: #6a5acd;
+    color: #fff;
+}
+
+.active-btn {
+    background-color: green;
+    color: #ffffff;
+}
+.deactive-btn {
+    background-color: red;
+    color: rgb(255, 255, 255);
+}
+
+
+    </style>
+    <header>
+        <h1>Customer List</h1>
+        <div class="search-container">
+            <input type="text" id="search" placeholder="Search by name or email..." >
+            <button class="back-btn" onclick="window.location.href=''">← Back</button>
+
+        </div>
+    </header>
+
+    <section class="content">
+        <!-- Customer Table -->
+        <div class="customer-list">
+            <h2>All Customers</h2>
+            <table>
+                <thead>
+                    
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+
+                </thead>
+                <tbody id="customer-table-body">
+                    {% if users %}
+                    {% for user in users %}
+                    <tr>
+                        <td>{{user.username}}</td>
+                        <td>{{user.email}}</td>
+                        <td>{{user.id}}</td>
+                        {% if user.is_active %}
+                        <td><a href="{% url 'toggle_user_status' user.id %}"><button class="active-btn">Active</button></a></td>
+                        {% else %}
+                        <td><a href="{% url 'toggle_user_status' user.id %}"><button class="deactive-btn">Deactive</button></a></td>
+                        {% endif %}
+
+                        <td>
+                            <button class="view-btn">View</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    {% endif %}
+                    
+                </tbody>
+            </table>
+        </div>
+    </section>
+    {% endblock %}
+</body>
+</html>

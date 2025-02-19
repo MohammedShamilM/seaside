@@ -1,0 +1,143 @@
+{% extends 'admin-base.html' %}
+{% load static %}
+{% block sidebar %}
+    <ul >
+        <li ><a href="{% url 'admin_dash' %}" ><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+        <li><a href="{% url 'admin_order_list' %}"><i class="fas fa-shopping-cart"></i> Orders</a></li>
+        <li><a href="{% url 'admin_products' %}"><i class="fas fa-box-open"></i> Products</a></li>
+        <li><a href="{% url 'admin_categories' %}" class="active"><i class="fas fa-tags"></i> Categories</a></li>
+        <li><a href="{% url 'coupons' %}"><i class="fas fa-percent" ></i> Coupons</a></li>
+        <!-- <li><a href="#"><i class="fas fa-bullhorn"></i> Offers</a></li> -->
+        <li><a href="#"><i class="fas fa-comments"></i> Reviews</a></li>
+        <li><a href="{% url 'user_list' %}"><i class="fas fa-users"></i> Customers</a></li>
+    </ul>
+{% endblock %}
+{% block maincontent %}
+<style>
+   
+    
+ header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    }
+
+    header h1 {
+        color: #333;
+    }
+
+    .add-category-btn {
+        padding: 10px 20px;
+        background-color: #6a5acd;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .add-category-btn:hover {
+        background-color: #382b91;
+    }
+
+    .content {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .category-table {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    table th, table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    table th {
+        background-color: #f4f5f7;
+        color: #333;
+    }
+
+    .edit-btn, .status {
+        padding: 5px 10px;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .edit-btn {
+        background-color: #6a5acd;
+    }
+    .edit-btn:hover {
+        background-color: #463996;
+    }
+
+    
+
+
+    .status {
+        background-color: rgb(255, 0, 0);
+        margin-left: 5px;
+    }
+    .status.active {
+        background-color: #4CAF50;
+
+    }
+
+</style>
+
+<header>
+    <h1>Category List</h1>
+    <a href="{% url 'add_category' %}"><button class="add-category-btn" >+ Add Category</button></a>
+</header>
+
+<section class="content">
+    <div class="category-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>Category ID</th>
+                    <th>Category Name</th>
+                    <!-- <th>Description</th> -->
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if categories%}
+                {% for category in categories %}
+                <tr>
+                    <td>{{category.id}}</td>
+                    <td>{{category.name}}</td>
+                    <!-- <td>{{category.description| slice:":23"}}</td> -->
+                    <td>
+                        <a href="{% url 'edit_category' category.id %}"><button class="edit-btn">Edit</button></a>
+                        {% if category.is_listed %}
+                        <a href="{% url 'toggle_category_status' category.id %}"><button class="status active">Listed</button></a>
+                        {% else %}
+                        <a href="{% url 'toggle_category_status' category.id %}"><button class="status">UnList</button></a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+                {% endif %}
+                
+                
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}
+
+</body>
+</html>

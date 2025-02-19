@@ -1,0 +1,100 @@
+{% extends 'admin-base.html' %}
+{% load static %}
+{% block sidebar %}
+    <ul >
+        <li ><a href="{% url 'admin_dash' %}" ><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+        <li><a href="{% url 'admin_order_list' %}"><i class="fas fa-shopping-cart"></i> Orders</a></li>
+        <li><a href="{% url 'admin_products' %}"><i class="fas fa-box-open"></i> Products</a></li>
+        <li><a href="{% url 'admin_categories' %}"><i class="fas fa-tags"></i> Categories</a></li>
+        <li><a href="{% url 'coupons' %}" class="active"><i class="fas fa-percent" ></i> Coupons</a></li>
+        <!-- <li><a href="#"><i class="fas fa-bullhorn"></i> Offers</a></li> -->
+        <li><a href="#"><i class="fas fa-comments"></i> Reviews</a></li>
+        <li><a href="{% url 'user_list' %}"><i class="fas fa-users"></i> Customers</a></li>
+    </ul>
+{% endblock %}
+{% block maincontent %}
+<style>
+.add-coupon {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.add-coupon h2 {
+    margin-bottom: 15px;
+    color: #333;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+form label {
+    font-weight: bold;
+    color: #555;
+}
+
+form input, form textarea {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.add-btn {
+    padding: 10px 15px;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 10px;
+}
+</style>
+<!-- Add Coupon Form -->
+ {% if coupon %}
+    <div class="add-coupon">
+        <h2>Edit Coupon</h2>
+        <form action="{% url 'edit_coupon' coupon.id %}" method="post">
+            {% csrf_token %}
+            <label>Coupon Code</label>
+            <input type="text" value="{{coupon.code}}" required name="couponcode">
+            <label>Discount (%)</label>
+            <input type="number" value="{{coupon.discount}}" required name="discount">
+            <label>Min_order_amount</label>
+            <input type="number" value="{{coupon.min_order_amount}}" required name="min_order_amount">
+            <label>Expiration Date</label>
+            <input type="date" required value="{{coupon.expiration_date|date:'Y-m-d'}}" name="expiration_date">
+            <label>Description</label>
+            <textarea name="details">{{coupon.details}}</textarea>
+            <button type="submit" class="add-btn">submit</button>
+        </form>
+    </div>
+{% else %}
+
+<div class="add-coupon">
+    <h2>Add New Coupon</h2>
+    {% if message %}
+    <h6   style="font-size: smaller;color: red;">{{message}}</h6>
+    {% endif %}
+    <form action="{% url 'add_coupon' %}" method="post">
+        {% csrf_token %}
+        <label>Coupon Code</label>
+        <input type="text" placeholder="Enter coupon code" required name="couponcode">
+        <label>Discount (%)</label>
+        <input type="number" placeholder="Enter discount percentage" required name="discount">
+        <label>Min_order_amount</label>
+        <input type="number" placeholder="Enter min_order_amount" required name="min_order_amount">
+        <label>Expiration Date</label>
+        <input type="date" required name="expiration_date">
+        <label>Description</label>
+        <textarea placeholder="Enter description" name="details"></textarea>
+        <button type="submit" class="add-btn">Add Coupon</button>
+    </form>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block title %}
+    <title>Admin Dashboard</title>
+    {% endblock %}
+    <!-- Link to CSS -->
+    <link rel="stylesheet" href="{% static 'admin/css/base.css' %}">
+    {% block customcss %}
+    <link rel="stylesheet" href="{% static 'admin/css/base.css' %}">
+
+    {% endblock %}
+     
+    <!-- Favicon (Optional) -->
+    <link rel="icon" href="{% static 'admin/img/logo.jpg' %}" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+</head>
+<body>
+    <!-- Hamburger Menu Icon -->
+    <div class="hamburger" aria-label="Toggle Sidebar">&#9776;</div>
+
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <img src="{% static 'user/img/logoo.png' %}" alt="" width="90%">
+        {% block sidebar %}
+        <ul >
+            <li ><a href="{% url 'admin_dash' %}" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+            <li><a href="{% url 'admin_order_list' %}"><i class="fas fa-shopping-cart"></i> Orders</a></li>
+            <li><a href="{% url 'admin_products' %}"><i class="fas fa-box-open"></i> Products</a></li>
+            <li><a href="{% url 'admin_categories' %}"><i class="fas fa-tags"></i> Categories</a></li>
+            <li><a href="{% url 'coupons' %}"><i class="fas fa-percent" ></i> Coupons</a></li>
+            <!-- <li><a href="#"><i class="fas fa-bullhorn"></i> Offers</a></li> -->
+            <li><a href="#"><i class="fas fa-comments"></i> Reviews</a></li>
+            <li><a href="{% url 'user_list' %}"><i class="fas fa-users"></i> Customers</a></li>
+            <li><a href="{% url 'user_logout' %}"><i ></i> Logout</a></li>
+        </ul>
+        {% endblock %}
+        
+    </div>
+
+    <!-- Main Content -->
+     <div class="main-content">
+        {% block maincontent%}
+        <h3>test</h3>
+        {% endblock %}
+     </div>
+    
+
+</body>
+</html>

@@ -1,0 +1,177 @@
+{% extends 'user-base.html' %}
+{%load static%}
+{% block nav %}
+     <a href="{% url 'home' %}" class="nav-item nav-link  active">Home</a>
+     <a href="{% url 'products' %}" class="nav-item nav-link ">Products</a>
+     <a href="#" class="nav-item nav-link">Contact Us</a>
+{% endblock %}
+    {% block maincontent %}
+    <style>
+        /*** Hero Header ***/
+        .hero-header {
+            background:  url("{% static 'user/img/base-bg.jpg' %}") ;
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+      
+
+    </style>
+        <!-- Hero Start -->
+        <div class="container-fluid py-5 mb-5 hero-header">
+            <div class="container py-5">
+                <div class="row g-5 align-items-center">
+                    <div class="col-md-12 col-lg-7">
+                        <h1 class="mb-5 display-3 text-secondary"  >Latest Smartphones at Your Fingertips</h1>
+                        <h4 class="mb-3 text-white"  >Discover the Best Deals & New Releases</h4>
+                        <!-- <div class="position-relative mx-auto">
+                            <input class="form-control border-2 border-secondary w-75 py-3 px-4 rounded-pill" type="number" placeholder="Search">
+                            <button type="submit" class="btn btn-primary border-2 border-secondary py-3 px-4 position-absolute rounded-pill text-white h-100" style="top: 0; right: 25%;">Submit Now</button>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Hero End -->
+
+        <!-- Featurs Section Start -->
+        <div class="container-fluid featurs py-5">
+            <div class="container py-5">
+                <div class="row g-4">
+                    <div class="col-md-6 col-lg-3">
+                        <div class="featurs-item text-center rounded bg-light p-4">
+                            <div style="width: 50%; height: 100px;" class="featurs-icon  btn-square rounded-circle bg-secondary mb-5 mx-auto">
+                                <i class="fas fa-car-side fa-3x text-white"></i>
+                            </div>
+                            <div class="featurs-content text-center">
+                                <h5>Free Shipping</h5>
+                                <p class="mb-0">Free on order over 1000</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="featurs-item text-center rounded bg-light p-4">
+                            <div style="width: 50%; height: 100px;" class="featurs-icon  btn-square rounded-circle bg-secondary mb-5 mx-auto">
+                                <i class="fas fa-user-shield fa-3x text-white"></i>
+                            </div>
+                            <div class="featurs-content text-center">
+                                <h5>Security Payment</h5>
+                                <p class="mb-0">100% security payment</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="featurs-item text-center rounded bg-light p-4">
+                            <div style="width: 50%; height: 100px;" class="featurs-icon  btn-square rounded-circle bg-secondary mb-5 mx-auto">
+                                <i class="fas fa-exchange-alt fa-3x text-white"></i>
+                            </div>
+                            <div class="featurs-content text-center">
+                                <h5>7 Day Return</h5>
+                                <p class="mb-0">7 day money guarantee</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="featurs-item text-center rounded bg-light p-4">
+                            <div style="width: 50%; height: 100px;" class="featurs-icon  btn-square rounded-circle bg-secondary mb-5 mx-auto">
+                                <i class="fa fa-phone-alt fa-3x text-white"></i>
+                            </div>
+                            <div class="featurs-content text-center">
+                                <h5>24/7 Support</h5>
+                                <p class="mb-0">Support every time fast</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Featurs Section End -->
+         <!-- products Start-->
+        <div class="container-fluid fruite py-5">
+            <div class="container py-5">
+                <div class="tab-class text-center">
+                    <div class="row g-4">
+                        <div class="col-lg-4 text-start">
+                            <h1>Our Products</h1>
+                        </div>
+                        <div class="col-lg-8 text-end">
+                            <ul class="nav nav-pills d-inline-flex text-center mb-5">
+                                <li class="nav-item">
+                                    <a class="d-flex m-2 py-2  rounded-pill active" style="background-color: rgb(219, 219, 219);" data-bs-toggle="pill" href="{% url 'home' %}">
+                                        <span class="text-dark" style="width: 130px;">All Products</span>
+                                    </a>
+                                </li>
+                           
+                                {% for category in categories %}
+                            
+                                <li class="nav-item">
+                                    <form action="{% url 'home' %}" method="get">
+                                    <button style="all: unset; cursor: pointer;background-color: rgb(219, 219, 219);" class="d-flex py-2 m-2  rounded-pill"  data-bs-toggle="pill" href="{{category.id}}">
+                                        <span class="text-dark" style="width: 130px;">{{category.name}}</span>
+                                    </button>
+                                    <input type="hidden" value="{{category.name}}" name="filterr">
+                                    </form>
+
+                                </li>
+                                
+                                {%  endfor %}
+                                
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="tab-content">
+                        <div id="tab-1" class="tab-pane fade show p-0 active">
+                            <div class="row g-4">
+                                <div class="col-lg-12">
+                                    <div class="row g-4">
+                                        {% if variants %}
+                                        {% for variant in variants %}
+                                        <div class="col-md-6 col-lg-4 col-xl-3">
+                                            <a href="{% url 'products_details' variant.product.id %}">
+                                            <div class="rounded position-relative fruite-item ">
+                                                <div class="fruite-img border border-secondary rounded-top">
+                                                    <img src="{{ variant.images.all.0.image.url }}" class="img-fluid w-100 rounded-top" alt="">
+                                                </div>
+                                                <div class="p-4 border border-secondary border-top-0 rounded-bottom">
+                                                    <h4>{{variant.product.name| slice:":16"}}</h4>
+                                                    {% if variant.color and variant.storage %}
+                                                    <p>({{variant.color}}, {{variant.storage}})</p>
+                                                    {% elif variant.color %}
+                                                    <p>({{variant.color}})</p>
+                                                    {% elif variant.storage %}
+                                                    <p>({{variant.storage}})</p>
+                                                    {% else %}
+                                                    <p>Accessories</p>
+                                                    {% endif %}
+                                                    <p>{{variant.product.description| slice:":45"}}</p>
+                                                    <p>{{variant.value}}</p>
+                                                    <div class="d-flex justify-content-center flex-lg-wrap">
+                                                        {% if  variant.offer_price is None %}
+                                                        <p class="text-dark fs-8 fw-bold mb-0">₹{{ variant.price }}</p>
+                                                        {% else %}
+                                                        <p class="text-danger fs-8 fw-bold mb-0 d-inline" style="text-decoration: line-through;">₹ {{ variant.price }}</p>
+                                                        <p class="text-dark fs-8 fw-bold mb-0 d-inline ms-2">₹{{ variant.offer_price }}</p>
+                                                        {% endif %}
+                                                    </div>
+                                                    <a href="{% url 'add_to_cart' variant.id %}" class="btn border border-secondary rounded-pill px-3 text-dark"><i class="fa fa-shopping-bag me-2 text-dark"></i> Add to cart</a>
+                                                </div>
+                                            </div>
+                                        </a>
+                                        </div>
+                                        {% endfor %}
+                                        {% endif %}
+                                        {% if Filter %}
+                                        <h5 class="text-danger">No items in category {{Filter}}</h5>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>      
+            </div>
+        </div>
+        <!-- products End-->
+    {% endblock %}
+</body>
+</html>

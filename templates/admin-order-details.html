@@ -1,0 +1,105 @@
+{% extends 'admin-base.html' %}
+{% load static %}
+{% block sidebar %}
+    <ul >
+        <li ><a href="{% url 'admin_dash' %}" ><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+        <li><a href="{% url 'admin_order_list' %}" class="active"><i class="fas fa-shopping-cart"></i> Orders</a></li>
+        <li><a href="{% url 'admin_products' %}"><i class="fas fa-box-open"></i> Products</a></li>
+        <li><a href="{% url 'admin_categories' %}"><i class="fas fa-tags"></i> Categories</a></li>
+        <li><a href="{% url 'coupons' %}"><i class="fas fa-percent" ></i> Coupons</a></li>
+        <!-- <li><a href="#"><i class="fas fa-bullhorn"></i> Offers</a></li> -->
+        <li><a href="#"><i class="fas fa-comments"></i> Reviews</a></li>
+        <li><a href="{% url 'user_list' %}"><i class="fas fa-users"></i> Customers</a></li>
+    </ul>
+{% endblock %}
+{% block maincontent %}
+<link rel="stylesheet" href="{% static 'admin/css/order-details.css' %}">
+
+<header>
+    <h1>Order Details</h1>
+    <button onclick="backToOrders()">Back to Orders</button>
+</header>
+
+<!-- Order Summary Section -->
+<section class="order-summary">
+    <div class="order-info">
+        <h2>Order ID: #{{order.order_id}}</h2>
+        <p><strong>Order Date:</strong> {{order.created_at|date:"d-m-Y"}}</p>
+        <p><strong>Status:</strong> {{order.order_status}}</p>
+    </div>
+    
+    <div class="shipping-info">
+        <h3>Shipping Information</h3>
+        <p><strong>Name:</strong> {{order.user}}</p>
+        <p><strong>Address:</strong>{{order.shipping_address}}</p>
+        <p><strong>Contact:</strong>+91 {{order.shipping_address.phone_number}}</p>
+    </div>    
+
+    <div class="payment-info">
+        <h3>Payment Information</h3>
+        <p><strong>Method:</strong> {{order.payment_method}}</p>
+        <p><strong>Payment Status:</strong> {{order.payment_status}}</p>
+        <p><strong>Total Amount:</strong> ${{order.total_price}}</p>
+    </div>
+</section>
+
+<!-- Order Items Section -->
+<section class="order-items">
+    <h3>Items in Order</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Quantity</th>
+                <th>Total</th>
+                <th>Status</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in order_items %}
+            <tr>
+                <td>{{item.product}}</td>
+                <td>{{item.quantity}}</td>
+                <td>${{item.price}}</td>
+                
+                {% if item.status == 'Requested Return' %}
+                <td><a href="{% url 'approve_return' item.id %}"><button class="item-status-update-button" type="submit" >Approve Request</button></a></td>
+                {% else %}
+                <td><button class="item-status-update-button" type="submit" >{{item.status}}</button></td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+
+<!-- Status Updates Section -->
+<section class="status-updates">
+    
+    <!-- Update Status Option -->
+    {% if order.order_status != 'Returned'   %}
+    {% if order.payment_method != 'Razorpay' and order.payment_status != 'Pending' %}
+    <div class="update-status">
+        <h4>Update Order Status</h4>
+        <form action="{% url 'admin_order_detail' order.id %}" method="post">
+            {% csrf_token %}
+            <select name="status" class="status-dropdown">
+                {% for status in status_options %}
+                    <option value="{{ status }}" {% if order.order_status == status %}selected{% endif %}>
+                        {{ status }}
+                    </option>
+                {% endfor %}
+            </select>
+            </select>
+            {% if message %}
+            <p style="color: red;">{{message}}</p>
+            {% endif %}
+            <br>
+            <button type="submit">Update Status</button>
+        </form>
+    </div>
+    {% endif %}
+    {% endif %}
+</section>
+{% endblock %}

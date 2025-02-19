@@ -1,0 +1,86 @@
+{% load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Category</title>
+    <link rel="stylesheet" href="{% static 'admin/css/add-product.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+
+</head>
+<body>
+    
+    <div class="main-content">
+        <header style="justify-content: center;">
+            <h1>Add New Product</h1>
+        </header>
+        <section class="add-product">
+            <div class="card">
+              {% if messages %}
+                {% for message in messages %}
+                <h5 style="color: #ff0000;">{{ message }}</h5>
+                {% endfor %}
+                 {% endif %}
+                    <form {% if Product %} action="{% url 'edit_product' Product.id variants.id %}" {% else %} action="{% url 'add_product' %}" {% endif %} method="post" >
+                        {% csrf_token %}
+                        <!-- Step 1: Basic Product Details -->
+                        <div class="form-step active">
+                          <h3>Step 1: Basic Product Details</h3>
+
+                          <div class="form-group">
+                            <label for="productName">Product Name</label>
+                            <input type="text" id="productName" {% if Product %} value="{{Product.name}}" {% endif %} name="productName" required>
+                          </div>
+                          
+                          <div class="form-group">
+                            <label for="category">Category</label>
+                            <select id="category" name="category" required>
+                            <option value="{{Product.category.id}}">{{Product.category.name}}</option>
+
+                                {% for category in categories %}
+                                {% if category.id != Product.category.id %}
+                            <option value="{{category.id}}"> {{category.name}}</option>
+                                {% endif %}
+                                {% endfor %}
+                          </select>
+                          </div>
+
+                          <div class="form-group">
+                            <label for="BrandName" >Brand Name</label>
+                            <input type="text" {% if Product %} value="{{Product.brand_name}}" {% endif %} id="BrandName" name="brand" required>
+                          </div>
+                          
+                          
+
+                          <div class="form-group">
+                            <label for="productDescription">Description (min 50 characters):</label>
+                            <textarea id="description" name="productDescription"  class="form-control" placeholder="write product description" id="floatingTextarea2" style="height: 100px; width: 100%;">{% if Product %} {{Product.description}}" {% endif %}</textarea>
+                            <small id="feedback" style="color: red;">At least 50 characters required.</small><br>
+                          </div>
+                          
+                          <button type="submit" class="submit-btn">Next</button>
+                        </div><br>
+                </form>
+                
+            </div>
+        </section>
+    </div>
+    <script>
+      const textarea = document.getElementById('description');
+      const feedback = document.getElementById('feedback');
+    
+      textarea.addEventListener('input', () => {
+        if (textarea.value.length >= 50) {
+          feedback.textContent = 'Looks good!';
+          feedback.style.color = 'green';
+        } else {
+          feedback.textContent = `At least 50 characters required (${50 - textarea.value.length} more to go).`;
+          feedback.style.color = 'red';
+        }
+      });
+    </script>
+
+</body>
+</html>

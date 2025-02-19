@@ -1,0 +1,169 @@
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+header h1 {
+    font-size: 24px;
+    color: #333;
+}
+
+header button {
+    padding: 8px 16px;
+    background-color: #6a5acd;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+header button:hover {
+    background-color: #513bdf;
+}
+.status button {
+    padding: 4px 12px;
+    background-color: #6a5acd;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.status button:hover {
+    background-color: #513bdf;
+}
+
+.order-summary {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.order-info, .shipping-info, .payment-info {
+    flex: 1 1 45%;
+    background-color: #f9f9f9;
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.order-info h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+h3 {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+p {
+    color: #555;
+    margin-bottom: 6px;
+}
+
+.order-items table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.order-items table thead th {
+    background-color: #6a5acd;
+    color: #fff;
+    padding: 10px;
+    text-align: left;
+    font-weight: bold;
+}
+
+.order-items table tbody td {
+    padding: 10px;
+    color: #333;
+    border-bottom: 1px solid #ddd;
+}
+
+.order-items table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.status-updates ul {
+    list-style-type: none;
+    padding: 0;
+    margin-top: 10px;
+}
+
+.status-updates li {
+    color: #555;
+    margin-bottom: 8px;
+}
+
+.status-updates li strong {
+    color: #333;
+}
+/* Status Update Section */
+.update-status {
+    margin-top: 20px;
+    text-align: left;
+}
+
+.update-status h4 {
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+.status-dropdown {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.update-status button {
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.update-status button:hover {
+    background-color: #218838;
+}
+.item-status-dropdown {
+    width: 50%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.item-status-update-button {
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.item-status-update-button:hover {
+    background-color: #218838;
+}

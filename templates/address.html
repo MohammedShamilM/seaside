@@ -1,0 +1,65 @@
+{% extends 'my_account.html' %}
+{% load static %}
+{% block sidebar %}
+    <ul>
+        <li><a href="{% url 'my_account' %}" >Dashboard</a></li>
+        <li><a href="{% url 'my_orders' %}">Orders</a></li>
+        <li><a href="{% url 'wallet' %}">Wallet</a></li>
+        <li><a href="{% url 'my_address' %}" class="active">Address</a></li>
+        <li><a href="{% url 'user_logout' %}">Logout</a></li>
+    </ul>
+{% endblock %}
+{% block maincontent %}
+<link rel="stylesheet" href="{% static 'user/css/address.css' %}">
+
+<!-- Main Content -->
+<div class="account-content">
+
+    <header>
+        <h1>Address Details</h1>
+        <a href="{% url 'home' %}"><button class="back-btn" >← Back to Home</button></a>
+    </header>
+    
+    <div class="address-container">
+        <div class="header">
+            <h1>My Addresses</h1>
+            <a href="{% url 'add_address'%}"><button  class="new-address-btn">+ Add New Address</button></a>
+        </div>
+        
+        <div class="address-list">
+            <!-- Example Address -->
+             {% if Address %}
+             {% for address in Address %}
+            <div class="address-card">
+                <div class="address-details">
+                    <p><strong>Name:</strong>  {{address.name}}</p>
+                    <p><strong>Address:</strong> {{address.address}}</p>
+                    <p><strong>City:</strong>{{address.city}}</p>
+                    <p><strong>State:</strong>{{address.state}}</p>
+                    <p><strong>Postal-code:</strong>{{address.postal_code}}</p>
+                    <p><strong>Phone:</strong>{{address.phone_number}}</p>
+
+                </div>
+                <div class="address-actions">
+                        <a href="{% url 'edit_address' address.id %}"><button type="submit" class="edit-btn">Edit</button></a>
+                    
+                    <form action="{% url 'list_address' address.id %}", method="post">
+                        {% csrf_token %}
+                        {% if address.is_listed %}
+                        <button class="delete-btn">UnList</button>
+                        {% else %}
+                        <button class="delete-btn">List</button>
+                        {% endif %}
+                        
+                    </form>
+                      
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <h3>No address</h3>
+            {% endif %}   
+        </div>
+    </div>
+</div>
+{% endblock %}

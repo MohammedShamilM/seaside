@@ -1,0 +1,131 @@
+{% extends 'admin-base.html' %}
+{% load static %}
+{% block sidebar %}
+    <ul >
+        <li ><a href="{% url 'admin_dash' %}" class="active" ><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+        <li><a href="{% url 'admin_order_list' %}"><i class="fas fa-shopping-cart"></i> Orders</a></li>
+        <li><a href="{% url 'admin_products' %}"><i class="fas fa-box-open"></i> Products</a></li>
+        <li><a href="{% url 'admin_categories' %}"><i class="fas fa-tags"></i> Categories</a></li>
+        <li><a href="{% url 'coupons' %}"><i class="fas fa-percent" ></i> Coupons</a></li>
+        <li><a href="#"><i class="fas fa-bullhorn"></i> Offers</a></li>
+        <li><a href="#"><i class="fas fa-comments"></i> Reviews</a></li>
+        <li><a href="{% url 'user_list' %}"><i class="fas fa-users"></i> Customers</a></li>
+    </ul>
+{% endblock %}
+{% block maincontent %}
+<link rel="stylesheet" href="{% static 'admin/css/order-list.css' %}">
+<style>
+    .item-status-dropdown {
+    width: 25%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+</style>
+<h2>Sales Report</h2>
+
+<form method="GET" action="{% url 'sales_report' %}">
+    <label for="date_range">Select Range:</label>
+    <select name="date_range" id="date_range" class="item-status-dropdown" onchange="toggleDateInputs()">
+        <option value="day">Today</option>
+        <option value="week">This Week</option>
+        <option value="month">This Month</option>
+        <option value="custom">Custom</option>
+    </select>
+
+    <div id="custom_dates" style="display: none;">
+        <label for="start_date">Start Date:</label>
+        <input type="date" name="start_date" class="item-status-dropdown" id="start_date">
+
+        <label for="end_date">End Date:</label>
+        <input type="date" name="end_date" class="item-status-dropdown" id="end_date">
+    </div>
+
+    <button type="submit">Filter</button>
+</form>
+
+<script>
+    function toggleDateInputs() {
+        var range = document.getElementById("date_range").value;
+        var customDates = document.getElementById("custom_dates");
+        if (range === "custom") {
+            customDates.style.display = "block";
+        } else {
+            customDates.style.display = "none";
+        }
+    }
+</script>
+
+
+<section class="content">
+    <!-- Order Table -->
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Order Date</th>
+                    <th>Status</th>
+                    <th>Total Amount</th>
+                    <th>Discount</th>
+                    <th>Address</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="orderTableBody"  >
+                {% if order_list %}
+                {% for order in order_list %}
+                <tr>
+                    <td>{{order.order_id}}</td>
+                    <td>{{order.created_at|date:"d-m-Y"}}</td>
+                    <td>{{order.order_status}}</td>
+                    <td>${{order.total_price}}</td>
+                    {% if order.discount%}
+                    <td>{{order.discount}}%</td>
+                    {% else %}
+                    <td>none</td>
+                    {% endif %}
+                    <td>{{order.shipping_address}}</td>
+                    <td>
+                        <a href="{% url 'admin_order_detail' order.id %}"><button class="view-details">View Details</button></a>
+                    </td>
+                </tr>
+                {% endfor %}
+                {% elif result %} 
+                {% for order in result %}
+                <tr>
+
+                    <td>{{order.order_id}}</td>
+                    <td>{{order.created_at|date:"d-m-Y"}}</td>
+                    <td>{{order.order_status}}</td>
+                    <td>${{order.total_price}}</td>
+                    <td>{{order.shipping_address}}</td>
+                    <td>
+                        <a href="{% url 'admin_order_detail' order.id %}"><button class="view-details">View Details</button></a>
+                    </td>
+                </tr>
+                {% endfor %}
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<h3>Total Orders: {{ total_orders }}</h3>
+<h3>Total Sales Amount: {{ total_sales_amount }}</h3>
+<h3>Total Discount: {{ total_discount }}</h3>
+<br>
+<!-- Export options -->
+<a href="{% url 'download_pdf_report' %}?date_range={{ request.GET.date_range }}&start_date={{ request.GET.start_date }}&end_date={{ request.GET.end_date }}" class="btn btn-danger">
+    Download PDF
+</a>
+
+<a href="{% url 'download_excel_report' %}?date_range={{ request.GET.date_range }}&start_date={{ request.GET.start_date }}&end_date={{ request.GET.end_date }}" class="btn btn-success">
+    Download Excel
+</a>
+
+{% endblock %}

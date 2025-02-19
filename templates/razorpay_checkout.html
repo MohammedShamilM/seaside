@@ -1,0 +1,17 @@
+{% load static %}
+<form action="{% url 'payment_success' %}" method="POST">
+    {% csrf_token %}
+    <script src="https://checkout.razorpay.com/v1/checkout.js"
+        data-key="{{ razorpay_data.razorpay_key }}"
+        data-amount="{{ razorpay_data.total_price|floatformat:0 }}"
+        data-currency="INR"
+        data-order_id="{{ razorpay_data.razorpay_order_id }}"
+        data-name="Seaside"
+        data-description="Order Payment"
+        data-image="{% static 'user/img/logoom.png' %}"
+        data-prefill.name="{{ razorpay_data.user_name }}"
+        data-prefill.email="{{ razorpay_data.user_email }}"
+        data-theme.color="#F37254"></script>
+    <input type="hidden" name="razorpay_order_id" value="{{ razorpay_data.razorpay_order_id }}"> 
+    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+</form>

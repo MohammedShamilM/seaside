@@ -1,0 +1,66 @@
+{% load static %}
+{% load socialaccount %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="{% static 'user/css/login.css' %}">
+</head>
+<body>
+    <!-- Login Section -->
+    <div class="login-container">
+        <div class="login-box">
+            {% if admin %}
+            <h1>Admin Login</h1>
+            {% else %}
+            <h1>Login</h1>
+            <p>Get access to your Orders, Wishlist and Recommendations</p>
+            {% endif %}
+                {% if messages %}
+                {% for message in messages %}
+                <h5 style="color: #ff0000;">{{ message }}</h5>
+                {% endfor %}
+                 {% endif %}
+            <form {% if admin %} action="{% url 'admin_login' %}" {% else %} action="{% url 'user_login' %}" {% endif %} method="POST">
+                {% csrf_token %}
+                <!-- Email -->
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="username" placeholder="Enter your full name" required>
+                </div>
+                <!-- Password -->
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password"  {% if admin %}  maxlength="80" {% else %} maxlength="8" {% endif %} name="password" placeholder="Enter your password" required>
+                </div>
+
+                
+
+                <!-- Login Button -->
+                <button type="submit" class="login-button">Log In</button>
+                <br>
+                <br>
+                <hr>
+                <br>    
+                
+
+
+
+                
+            </form>
+            {% if not admin %}
+            <a href="{% provider_login_url 'google' %}"><button  class="google-button">Log In with Google</button></a>
+            
+            <!-- Forgot Password and Sign Up -->
+            <div class="additional-links">
+                <a href="{% url 'password_reset' %}">Forgot Password?</a>
+                <p>Don't have an account? <a href="{% url 'sign_up' %}">Sign Up</a></p>
+            </div>
+            {% else %}
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

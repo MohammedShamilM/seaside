@@ -1,0 +1,102 @@
+{% extends 'my_account.html' %}
+{% load static %}
+{% block sidebar %}
+    <ul>
+        <li><a href="{% url 'my_account' %}" >Dashboard</a></li>
+        <li><a href="{% url 'my_orders' %}">Orders</a></li>
+        <li><a href="#">Payment</a></li>
+        <li><a href="{% url 'my_address' %}" class="active">Address</a></li>
+        <li><a href="{% url 'user_logout' %}">Logout</a></li>
+    </ul>
+{% endblock %}
+{% block maincontent %}
+<link rel="stylesheet" href="{% static 'user/css/address.css' %}">
+
+<!-- Main Content -->
+<div class="account-content">
+
+    <header>
+        <h1>Address Details</h1>
+        <a href="{% url 'home' %}"><button class="back-btn" >← Back to Dashboard</button></a>
+    </header>
+    
+    <div class="address-container">
+        <div class="header">
+            <h1>Add New Address</h1>
+        </div>
+        {% if Address %}
+        <div class="add_address">
+            <form action="{% url 'edit_address' Address.id %}" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" value="{{Address.name}}" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone:</label>
+                    <input type="tel" id="phone" value="{{Address.phone_number}}" name="phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="address">Address:</label>
+                    <textarea id="address" name="address"  rows="3" required>{{Address.address}}</textarea>
+                </div>
+                <div class="form-group">
+                    <label for="city">City:</label>
+                    <input type="text" id="city" value="{{Address.city}}" name="city" required>
+                </div>
+                <div class="form-group">
+                    <label for="state">State:</label>
+                    <input type="text" id="state" value="{{Address.state}}" name="state" required>
+                </div>
+                <div class="form-group">
+                    <label for="zip">ZIP Code:</label>
+                    <input type="text" id="zip" value="{{Address.postal_code}}" name="zip" required>
+                </div>
+                <div class="actions">
+                    <button type="submit" class="save-btn">Save Address</button>
+                </div>
+
+            </form>
+        </div>
+        {% else %}
+        
+
+        <div class="add_address">
+            <form action="{% url 'add_address' %}" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone:</label>
+                    <input type="tel" id="phone" name="phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="address">Address:</label>
+                    <textarea id="address" name="address" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="city">City:</label>
+                    <input type="text" id="city" name="city" required>
+                </div>
+                <div class="form-group">
+                    <label for="state">State:</label>
+                    <input type="text" id="state" name="state" required>
+                </div>
+                <div class="form-group">
+                    <label for="zip">ZIP Code:</label>
+                    <input type="text" id="zip" name="zip" required>
+                </div>
+                <div class="actions">
+                    <button type="submit" class="save-btn">Save Address</button>
+                </div>
+
+            </form>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+
+{% endblock %}

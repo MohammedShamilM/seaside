@@ -1,0 +1,220 @@
+{% extends 'user-base.html' %}
+{% block maincontent %}
+{% if Cart_Item %}
+<div class="container-fluid pb-5 ">
+    <h1 class="text-center">Checkout</h1>
+    <div class="container pb-5">
+        <h1 class="mb-4">Shipping details</h1>
+        
+            <div class="row g-5">
+                <div class="col-md-12 col-lg-6 col-xl-7">
+                    <form action="{% url 'checkout' %}" method="post">
+                    {% csrf_token %}
+                    <!-- <div class="form-check my-3">
+                        <input class="form-check-input bg-white" type="checkbox" id="Address-1" name="Address" value="Address">
+                        <label class="form-check-label " for="Address-1">same as primary address </label>
+                    </div> -->
+                    <div class="form-item w-100">
+                        <label class="form-label my-3">Name<sup>*</sup></label>
+                        <input type="text" name="name" class="form-control" required>
+                    </div>
+                    
+                    
+                    <div class="form-item">
+                        <label class="form-label my-3">Address <sup>*</sup></label>
+                        <input type="text" name="address" class="form-control" placeholder="Address" required>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label my-3">City<sup>*</sup></label>
+                        <input type="text" name="city" class="form-control" required>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label my-3">State<sup>*</sup></label>
+                        <input type="text" name="state" class="form-control" required>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label my-3">Postcode/Zip<sup>*</sup></label>
+                        <input type="text" name="zip" class="form-control" required>
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label my-3">Mobile<sup>*</sup></label>
+                        <input type="tel"  maxlength="10" name="phone" class="form-control" required>
+                    </div>
+                    <div class="text-center pt-4 ms-1">
+                        <button type="submit"  class="btn border-secondary w-50 text-secondary">Save Address</button>
+                    </div>
+                    </form>
+                    <form action="{% url 'orderplaced' %}" method="post">
+                    {% csrf_token %}
+                    <div class="row justify-content-between ms-2">
+                        {% for address in useraddress %}
+                        <div class=" col-md-6 row g-4 text-center mt-2 align-items-center justify-content-center rounded py-3" style="background-color: rgb(241, 241, 241);">
+                            <div class="col-12">
+                                <div class="form-check text-start my-3">
+                                    <input type="radio" class="form-check-input  border-1" id="address" name="address" value="{{address.id}}">
+                                    <h4>{{address.name}}</h4>
+                                    <p>{{address.address}}</p>
+                                    <p>{{address.city}}</p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}        
+                    </div>
+                    {% if totalprice <= 1000 %}
+                    <div class="row g-4 text-center align-items-center justify-content-center border-bottom py-3">
+                        <div class="col-12">
+                            <div class="form-check text-start my-3">
+                                <input type="radio" class="form-check-input  border-1" id="payment-cash" name="paymentmethod" value="Cash On Delivery">
+                                <label class="form-check-label" for="payment-cash">Cash On Delivery</label>
+                                <p>(min order amount 1000)</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    <div class="row g-4 text-center align-items-center justify-content-center border-bottom py-3">
+                        <div class="col-12">
+                            <div class="form-check text-start my-3">
+                                <input type="radio" class="form-check-input  border-1" id="payment-Razorpay" name="paymentmethod" value="Razorpay">
+                                <label class="form-check-label" for="payment-Razorpay">Razorpay</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+
+                    {% if wallet_balance.balance >= totalprice %}
+                    <div class="row g-4 text-center align-items-center justify-content-center border-bottom py-3">
+                        <div class="col-12">
+                            <div class="form-check text-start my-3">
+                                <input type="radio" class="form-check-input  border-1" id="payment-wallet" name="paymentmethod" value="Wallet">
+                                <label class="form-check-label" for="payment-wallet">Wallet</label>
+                                <p>balance {{wallet_balance.balance}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    <input type="hidden" value="{{totalprice}}" name="totalprice">
+                    <input type="number"  style="display: none;" value="{{discounted_price}}" name="discounted_price">
+                    <input type="hidden" value="{{coupon.discount}}" name="coupon_discount">
+                    {% if discounted_price and discounted_price <= 500 %}
+                    <input type="number"  style="display: none;" value=50 name="shipping_fees">
+                    {% elif totalprice <= 500 %}
+                    <input type="number"  style="display: none;" value=50 name="shipping_fees">
+                    {% endif %}
+
+
+                    <div class="row g-4 text-center align-items-center justify-content-center pt-4">
+                        <button type="submit"  class="btn border-secondary py-3 px-4  w-100 text-secondary">OrderPlaced</button>
+                    </div>
+                    </form>    
+                </div>
+                
+                <div class="col-md-12 col-lg-6 col-xl-5">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Price</th>
+                                    <th scope="col">Quantity</th>
+                                    <th scope="col">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in Cart_Item %}
+                                <tr>
+                                    <td class="py-5">{{item.product.name}}</td>
+                                    <td class="py-5">₹{{item.variant.final_price}}</td>
+                                    <td class="py-5 text-center">{{item.quantity}}</td>
+                                    <td class="py-5">₹{{item.item_total}}</td>
+                                </tr>
+                                {% endfor %}
+                                <tr>
+                                    <th scope="row">
+                                    </th>
+                                    <td></td>
+                                    <td >
+                                        <p class=" text-dark ">Subtotal</p>
+                                    </td>
+                                    <td >
+                                            <p class="text-dark">₹{{totalprice}}</p>
+                                    </td>
+                                </tr>
+                                {% if totalprice <= 500 %}
+                                <tr>
+                                    <th scope="row">
+                                    </th>
+                                    <td></td>
+                                    <td >
+                                        <p class=" text-dark ">Shipping</p>
+                                    </td>
+                                    <td >
+                                            <p class="text-dark">₹50</p>
+                                    </td>
+                                </tr>
+                                {% elif discounted_price and discounted_price <= 500 %}
+                                <tr>
+                                    <th scope="row">
+                                    </th>
+                                    <td></td>
+                                    <td >
+                                        <p class=" text-dark ">Shipping</p>
+                                    </td>
+                                    <td >
+                                            <p class="text-dark">₹50</p>
+                                    </td>
+                                </tr>
+                                {% endif %}
+                                <tr>
+                                    <th scope="row">
+                                    </th>
+                                    <td></td>
+                                    <td >
+                                        <p class=" text-dark ">TOTAL</p>
+                                    </td>
+                                    <td>{% if discounted_price %}
+                                            <p class="text-dark">₹{{discounted_price}}</p>
+                                        {% else %}
+                                            <p class="text-dark">₹{{totalprice}}</p>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    
+                    
+                    <!-- <div class="table-responsive">
+                        <table class="table">
+                            <tbody>
+                                
+                            </tbody>
+                        </table>
+                    </div> -->
+                    <div class="mt-5">
+                        <form action="{% url 'apply_coupon' %}" method="post">
+                            {% csrf_token %}
+                            {% if message %}
+                            <h6 class="text-danger"  style="font-size: smaller;">{{message}}</h6>
+                            {% endif %}
+                            <select name="couponcode" id="" class="border-0 border-bottom rounded me-5 py-3 mb-4">
+                                <option value="">select coupon</option>
+                                {% for coupon in coupons %}
+                                <option value="{{coupon.code}}">{{coupon.code}}</option>
+                                {% endfor %}
+                            </select>
+                            <input type="hidden" name="totalprice" value="{{totalprice}}">
+                            <button class="btn border-secondary rounded-pill px-4 py-3 text-dark" type="submit">Apply Coupon</button>
+                        </form>
+                        
+                    </div>
+                </div>
+            </div>
+    </div>
+</div>
+{% else %}
+<h1 class="text-center">Add items to cart</h1>
+{% endif %}
+
+
+{% endblock %}
