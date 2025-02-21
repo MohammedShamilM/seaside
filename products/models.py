@@ -37,7 +37,7 @@ class variant(models.Model):
     stock = models.PositiveIntegerField()
     is_listed = models.BooleanField(default=True)  
     offer = models.IntegerField(null=True,default=0)
-    offer_price = models.DecimalField(max_digits=10, decimal_places=2,null=True, default=Decimal("0.00"))
+    offer_price = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal("0.00"))
     final_price = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal("0.00"))
 
 
