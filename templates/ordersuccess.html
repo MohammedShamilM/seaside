@@ -36,9 +36,10 @@
                 <li><strong>Final Price:</strong> ₹{{order.discount_price}}</li>
                 {% endif %}
             </ul>
+            <ul><a href="{% url 'download_invoice' order.id %}" class="download-btn">Download Invoice</a></ul>
         </div>
 
-       
+        
         <div class="actions">
             <a href="{% url 'home' %}" class="btn shop-btn text-dark">Continue Shopping</a>
         </div>
