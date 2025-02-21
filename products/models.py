@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from decimal import Decimal
 
 User = get_user_model()
 
@@ -32,12 +33,12 @@ class variant(models.Model):
     color = models.CharField(max_length=100,null=True)  
     storage = models.CharField(max_length=100,null=True)  
     RAM = models.CharField(max_length=100,null=True)  
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    price = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal("0.00"))
     stock = models.PositiveIntegerField()
     is_listed = models.BooleanField(default=True)  
     offer = models.IntegerField(null=True,default=0)
-    offer_price = models.DecimalField(max_digits=10, decimal_places=2,null=True)
-    final_price = models.DecimalField(max_digits=10, decimal_places=2)
+    offer_price = models.DecimalField(max_digits=10, decimal_places=2,null=True, default=Decimal("0.00"))
+    final_price = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal("0.00"))
 
 
     def __str__(self):

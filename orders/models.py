@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from datetime import timedelta  
 from django.utils import timezone 
 from products.models import product,variant
-
+from decimal import Decimal
 
 User = get_user_model()
 
@@ -46,8 +46,8 @@ class orders(models.Model):
     ]
     user = models.ForeignKey(User, on_delete=models.CASCADE,related_name='orders')
     order_id = models.CharField(max_length=6,unique=True,editable=False)
-    total_price = models.DecimalField(max_digits=10,decimal_places=2)
-    discount_price = models.DecimalField(max_digits=10,decimal_places=2,null=True)
+    total_price = models.DecimalField(max_digits=10,decimal_places=2, default=Decimal("0.00"))
+    discount_price = models.DecimalField(max_digits=10,decimal_places=2,null=True, default=Decimal("0.00"))
     discount = models.IntegerField(null=True)
     razorpay_order_id = models.CharField(max_length=255, null=True, blank=True)
     order_status = models.CharField(max_length=30,choices=STATUS_CHOICES,default='Order Pending')
@@ -96,8 +96,8 @@ class order_items(models.Model):
     variant = models.ForeignKey(variant, on_delete=models.CASCADE)
     quantity = models.IntegerField()
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Order Pending') 
-    price = models.DecimalField(max_digits=10,decimal_places=2)
-    subtotal = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    price = models.DecimalField(max_digits=10,decimal_places=2, default=Decimal("0.00"))
+    subtotal = models.DecimalField(max_digits=10, decimal_places=2,  default=Decimal("0.00"))
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
