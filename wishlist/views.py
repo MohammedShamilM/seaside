@@ -28,11 +28,11 @@ def add_to_wishlist(request,variant_id):
             Wishlist = wishlist(user = request.user)
             Wishlist.save()
         if  WhishlistItem.objects.filter(Wishlist = Wishlist, variant = Variant).exists():
-            return redirect('products')
+            return redirect('products_details',Variant.product.id)
         else:
             Wishlist_Item = WhishlistItem(Wishlist = Wishlist, variant = Variant, product = Variant.product, price = Variant.price, image = img )
             Wishlist_Item.save()
-            return redirect('products')
+            return redirect('products_details',Variant.product.id)
         
     else:
         return redirect('products')

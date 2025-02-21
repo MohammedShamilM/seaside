@@ -203,7 +203,7 @@ def orderPlaced(request):
                 shipping_address=shippingaddress
             )
             order.save()
-            if order.discount_price and order.discount_price <= 500:
+            if order.discount_price and int(order.discount_price) <= 500:
                 order.shipping_fees = shipping_fee
             elif int(order.total_price) <= 500:
                 order.shipping_fees = shipping_fee

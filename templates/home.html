@@ -6,6 +6,7 @@
      <a href="#" class="nav-item nav-link">Contact Us</a>
 {% endblock %}
     {% block maincontent %}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         /*** Hero Header ***/
         .hero-header {
@@ -153,7 +154,7 @@
                                                         <p class="text-dark fs-8 fw-bold mb-0 d-inline ms-2">₹{{ variant.offer_price }}</p>
                                                         {% endif %}
                                                     </div>
-                                                    <a href="{% url 'add_to_cart' variant.id %}" class="btn border border-secondary rounded-pill px-3 text-dark"><i class="fa fa-shopping-bag me-2 text-dark"></i> Add to cart</a>
+                                                    <a onclick="showSuccessToast()" href="{% url 'add_to_cart' variant.id %}" class="btn border border-secondary rounded-pill px-3 text-dark"><i class="fa fa-shopping-bag me-2 text-dark"></i> Add to cart</a>
                                                 </div>
                                             </div>
                                         </a>
@@ -172,6 +173,21 @@
             </div>
         </div>
         <!-- products End-->
+
+        <script>
+            function showSuccessToast() {
+                Swal.fire({
+                    icon: 'success',
+                    text: 'Item added to cart.',
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 30000,
+                    timerProgressBar: true,
+                });
+            }
+        </script>
+        
     {% endblock %}
 </body>
 </html>
