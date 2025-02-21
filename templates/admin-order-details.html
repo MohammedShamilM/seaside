@@ -39,7 +39,7 @@
         <h3>Payment Information</h3>
         <p><strong>Method:</strong> {{order.payment_method}}</p>
         <p><strong>Payment Status:</strong> {{order.payment_status}}</p>
-        <p><strong>Total Amount:</strong> ${{order.total_price}}</p>
+        <p><strong>Total Amount:</strong> ₹{{order.total_price}}</p>
     </div>
 </section>
 
@@ -61,7 +61,7 @@
             <tr>
                 <td>{{item.product}}</td>
                 <td>{{item.quantity}}</td>
-                <td>${{item.price}}</td>
+                <td>₹{{item.price}}</td>
                 
                 {% if item.status == 'Requested Return' %}
                 <td><a href="{% url 'approve_return' item.id %}"><button class="item-status-update-button" type="submit" >Approve Request</button></a></td>

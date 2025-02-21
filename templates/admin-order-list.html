@@ -50,7 +50,7 @@
                     <td>{{order.order_id}}</td>
                     <td>{{order.created_at|date:"d-m-Y"}}</td>
                     <td>{{order.order_status}}</td>
-                    <td>${{order.total_price}}</td>
+                    <td>₹{{order.total_price}}</td>
                     <td>{{order.shipping_address}}</td>
                     <td>
                         <a href="{% url 'admin_order_detail' order.id %}"><button class="view-details">View Details</button></a>
@@ -64,7 +64,7 @@
                     <td>{{order.order_id}}</td>
                     <td>{{order.created_at|date:"d-m-Y"}}</td>
                     <td>{{order.order_status}}</td>
-                    <td>${{order.total_price}}</td>
+                    <td>₹{{order.total_price}}</td>
                     <td>{{order.shipping_address}}</td>
                     <td>
                         <a href="{% url 'admin_order_detail' order.id %}"><button class="view-details">View Details</button></a>

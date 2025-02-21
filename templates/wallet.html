@@ -202,7 +202,7 @@ header {
         <div class="wallet-balance-card">
             <div class="balance-details">
                 <h2>Wallet Balance</h2>
-                <p class="balance-amount">${{wallet.balance}}</p>
+                <p class="balance-amount">₹{{wallet.balance}}</p>
             </div>
         </div>
 
@@ -232,7 +232,7 @@ header {
                         {% for item in debit_transactions %}
                         <tr>
                             <td>{{item.created_at|date:"d-m-Y"}}</td>
-                            <td>- ₹{{item.amount}}</td>
+                            <td style="color: red;">- ₹{{item.amount}}</td>
                             <td>₹{{item.balance_after}}</td>
                             <td>{{item.details}}</td>
                         </tr>
@@ -260,7 +260,7 @@ header {
                         {% for item in credit_transactions %}
                         <tr>
                             <td>{{item.created_at|date:"d-m-Y"}}</td>
-                            <td>+ ₹{{item.amount}}</td>
+                            <td style="color: green;">+ ₹{{item.amount}}</td>
                             <td>₹{{item.balance_after}}</td>
                             <td>{{item.details}}</td>
                         </tr>

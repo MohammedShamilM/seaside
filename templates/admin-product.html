@@ -130,9 +130,9 @@
                     <td>{{variant.storage}}</td>
                     <td>{{variant.product.category.name}}</td>
                     {% if variant.offer_price %}
-                    <td style="text-decoration: line-through; color: red;">${{ variant.price }}</td>
+                    <td style="text-decoration: line-through; color: red;">₹{{ variant.price }}</td>
                     {% else %}
-                    <td>${{ variant.price }}</td>
+                    <td>₹{{ variant.price }}</td>
                     {% endif %}
 
                     {% if variant.offer_price %}

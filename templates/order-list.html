@@ -36,7 +36,7 @@
                 </div>
                 <div class="order-status">
                     <span class="status">Status: {{order.order_status}}</span>
-                    <span class="total">Total: ${{order.total_price }}</span>
+                    <span class="total">Total: ₹{{order.total_price }}</span>
                 </div>
                 <a href="{% url 'order_details' order.id %}"><button class="view-details">View Details</button></a>
             </div>
@@ -51,7 +51,7 @@
                 </div>
                 <div class="order-status">
                     <span class="status">Status: {{order.order_status}}</span>
-                    <span class="total">Total: ${{order.total_price}}</span>
+                    <span class="total">Total: ₹{{order.total_price}}</span>
                 </div>
                 <a href="{% url 'order_details' order.id %}"><button class="view-details">View Details</button></a>
             </div>
