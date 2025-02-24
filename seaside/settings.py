@@ -112,6 +112,13 @@ DATABASES = {
     }
 }
 
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = "shamilmhd073@gmail.com"  # Change this to your email
+EMAIL_HOST_PASSWORD = "gmyi dtnx aont sfsv"  # Generate an App Password
+DEFAULT_FROM_EMAIL = "seasidemobilesphones@gmail.com"
 
 
 
@@ -199,6 +206,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 RAZORPAY_KEY_ID = os.getenv('RAZORPAY_KEY_ID')
 RAZORPAY_KEY_SECRET = os.getenv('RAZORPAY_KEY_SECRET')
