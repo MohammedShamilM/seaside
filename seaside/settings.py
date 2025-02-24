@@ -117,7 +117,7 @@ EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = "shamilmhd073@gmail.com"  # Change this to your email
-EMAIL_HOST_PASSWORD = "gmyi dtnx aont sfsv"  # Generate an App Password
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')  # Generate an App Password
 DEFAULT_FROM_EMAIL = "seasidemobilesphones@gmail.com"
 
 
