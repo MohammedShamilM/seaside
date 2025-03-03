@@ -128,6 +128,7 @@ def checkout (request):
 
         user = request.user
 
+
         if user_address.objects.filter(name = name,address = address,phone_number = phone_number,city = city,state =  state,user = user).exists():
             messages.error(request,"address already exists")
             return redirect('checkout')

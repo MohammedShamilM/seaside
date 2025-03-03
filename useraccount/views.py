@@ -128,6 +128,7 @@ def edit_address(request,address_id):
         postal_code = request.POST.get('zip')
         phone_number = request.POST.get('phone')
 
+
         if user_address.objects.filter(name = name,address = address,phone_number = phone_number,city = city,state =  state,user = Address.user).exists():
             messages.error(request,"address  already exists")
             return redirect('edit_address',address_id = Address.id)

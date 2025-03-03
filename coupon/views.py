@@ -95,6 +95,7 @@ def apply_coupon(request):
                                                        'message' : message,
                                                        'wallet_balance':wallet_balance})
 
+
             if coupon.discount:
                 discount = (totalprice // 100) * coupon.discount
                 discounted_price = totalprice - discount

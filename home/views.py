@@ -19,6 +19,7 @@ def home(request):
         print(Filter)
         variants = variant.objects.select_related('product__category').prefetch_related('images').exclude(Q(is_listed=False) | Q(product__category__is_listed=False))
         categories = category.objects.all()
+        
         if Filter:
             for  cat in categories:
                 if Filter == cat.name:

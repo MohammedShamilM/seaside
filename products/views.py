@@ -162,6 +162,7 @@ def add_variant(request,product_id):
             
             
             
+            
             if offer:
                 Variant = variant(
                         product=Product,

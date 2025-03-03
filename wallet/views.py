@@ -12,4 +12,5 @@ def user_wallet(request):
     debit_transactions = Transaction.objects.filter(wallet = wallet,transaction_type = 'debit').order_by('-created_at')
 
 
+
     return render(request,'wallet.html',{'wallet':wallet,'credit_transactions' : credit_transactions,'debit_transactions' : debit_transactions})
