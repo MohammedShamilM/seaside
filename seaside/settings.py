@@ -1,3 +1,5 @@
+
+
 """
 Django settings for seaside project.
 
