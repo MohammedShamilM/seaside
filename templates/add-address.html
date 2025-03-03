@@ -24,6 +24,11 @@
         <div class="header">
             <h1>Add New Address</h1>
         </div>
+        {% if messages %}
+                {% for message in messages %}
+                <h5 style="color: #ff0000;">{{ message }}</h5>
+                {% endfor %}
+                 {% endif %}
         {% if Address %}
         <div class="add_address">
             <form action="{% url 'edit_address' Address.id %}" method="post">

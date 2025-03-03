@@ -7,6 +7,7 @@ from orders.models import orders,order_items,shipping_address
 from datetime import timedelta
 from django.contrib.auth.decorators import login_required
 from wallet.models import Wallet,Transaction
+from django.contrib import messages
 
 # Create your views here.
 @login_required(login_url='user_login')
@@ -126,6 +127,10 @@ def checkout (request):
         phone_number = request.POST.get('phone')
 
         user = request.user
+
+        if user_address.objects.filter(name = name,address = address,phone_number = phone_number,city = city,state =  state,user = user).exists():
+            messages.error(request,"address already exists")
+            return redirect('checkout')
         address = user_address(name = name,
                            address = address,
                            city = city,
@@ -256,7 +261,7 @@ def orderPlaced(request):
                 razorpay_order_id=razorpay_order['id']
             )
             order.save()
-            if order.discount_price and order.discount_price <= 500:
+            if order.discount_price and int(order.discount_price) <= 500:
                 order.shipping_fees = shipping_fee
             elif int(order.total_price) <= 500:
                 order.shipping_fees = shipping_fee

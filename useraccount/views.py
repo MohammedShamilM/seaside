@@ -82,6 +82,9 @@ def User_address(request):
     print(request.user.id)
     return render (request,'address.html',context)
 
+
+from django.contrib import messages
+
 @login_required(login_url='user_login')
 def add_address(request):
     if request.method == 'POST':
@@ -93,6 +96,12 @@ def add_address(request):
         phone_number = request.POST.get('phone')
 
         user = request.user
+        if user_address.objects.filter(name = name,address = address,phone_number = phone_number,city = city,state =  state,user = user).exists():
+            messages.error(request,"address already exists")
+            return redirect('add_address')
+            
+
+        
         address = user_address(name = name,
                            address = address,
                            city = city,
@@ -118,6 +127,10 @@ def edit_address(request,address_id):
         state = request.POST.get('state')
         postal_code = request.POST.get('zip')
         phone_number = request.POST.get('phone')
+
+        if user_address.objects.filter(name = name,address = address,phone_number = phone_number,city = city,state =  state,user = Address.user).exists():
+            messages.error(request,"address  already exists")
+            return redirect('edit_address',address_id = Address.id)
 
         Address.name = name
         Address.address = address

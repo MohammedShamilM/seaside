@@ -2,10 +2,8 @@ from django.shortcuts import render,redirect,get_object_or_404
 from . models import category,product, variant, VariantImage,Review
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from orders.models import orders
 from products.models import variant
-from django.db.models import Sum, Count, F, ExpressionWrapper, DecimalField
-from django.db.models.functions import TruncDate, TruncWeek, TruncMonth, TruncYear
+
 
 
 
