@@ -29,7 +29,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'lnM03f0VQpcZhfZYfQte-JLEgp4QynaG8_22a70SgdX_abXKjD_-gtBlqSLCAr_vlv4 '
+SECRET_KEY =  os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -106,11 +106,11 @@ WSGI_APPLICATION = 'seaside.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'seaside_db',
-        'HOST': '127.0.0.1' ,
-        'PORT': '5432',
-        'USER': 'seaside',
-        'PASSWORD': '11111111',
+        'NAME':  os.getenv('DATABASE_NAME'),
+        'HOST':  os.getenv('DATABASE_HOST'),
+        'PORT':  os.getenv('DATABASE_PORT'),
+        'USER':  os.getenv('DATABASE_USER'),
+        'PASSWORD':  os.getenv('DATABASE_PASSWORD'),
     }
 }
 
@@ -121,23 +121,6 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = "shamilmhd073@gmail.com"  # Change this to your email
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')  # Generate an App Password
 DEFAULT_FROM_EMAIL = "seasidemobilesphones@gmail.com"
-
-
-
-
-
-
-
-
-
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'shamilmhd073@gmail.com'
-EMAIL_HOST_PASSWORD = 'gmyi dtnx aont sfsv'
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-
 
 
 
@@ -201,8 +184,8 @@ SOCIALACCOUNT_PROVIDERS = {
             'access_type': 'online',
         },
         'APP': {
-            'client_id': '992985322151-5kptbkmd5cu0mra8dq2gbn7ou5di83ag.apps.googleusercontent.com',
-            'secret': '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',
+            'client_id':  os.getenv('GOOGLE_CLIENT_ID'),
+            'secret':  os.getenv('GOOGLE_CLIENT_SECRET'),
             'key': ''
         }
     }
@@ -224,12 +207,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 
-<<<<<<< HEAD
-
 RAZORPAY_KEY_ID = os.getenv('RAZORPAY_KEY_ID')
 RAZORPAY_KEY_SECRET = os.getenv('RAZORPAY_KEY_SECRET')
-=======
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-RAZORPAY_KEY_ID =  'rzp_test_5lzjrY6J83FOqg'
-RAZORPAY_KEY_SECRET = 'TypUDPYkxh2gk2spXfZ6sVfy'
->>>>>>> fa3f2ee (done with settings)
