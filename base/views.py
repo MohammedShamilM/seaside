@@ -8,6 +8,7 @@ from django.conf import settings
 from django.utils import timezone
 from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
+from wallet.models import Wallet
 
 # Create your views here.
 @never_cache
@@ -46,6 +47,8 @@ def sign_up(request):
 
         myuser = User.objects.create_user(username = username, email = email, phone_number = phone_number, password = password)
         myuser.save()
+
+        Wallet.objects.get_or_create(user=myuser)
 
         return redirect('user_login')
     else:
