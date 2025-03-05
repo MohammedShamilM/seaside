@@ -97,8 +97,8 @@ def apply_coupon(request):
 
 
             if coupon.discount:
-                discount = (totalprice // 100) * coupon.discount
-                discounted_price = totalprice - discount
+                discount = (totalprice / 100) * coupon.discount
+                discounted_price = totalprice - int(discount)
                 discounted_price = int(discounted_price)
                 return render(request,'checkout.html',{'Cart_Item': Cart_Item,
                                                        'totalprice': totalprice,
