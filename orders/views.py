@@ -150,7 +150,7 @@ def approve_return(request,item_id):
     Item.save()
     order.total_price -= Item.subtotal
     order.save()
-    wallet = Wallet.objects.get(user = request.user)
+    wallet, _ = Wallet.objects.get_or_create(user=request.user)
     wallet.balance = wallet.balance + Item.subtotal
     wallet.save()
     details = f"Return orders of  {Item.product.name}"
