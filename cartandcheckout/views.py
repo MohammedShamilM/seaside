@@ -211,7 +211,7 @@ def orderPlaced(request):
             order.save()
             if order.discount_price and int(order.discount_price) <= 500:
                 order.shipping_fees = shipping_fee
-            elif int(order.total_price) <= 500:
+            elif int(float(order.total_price)) <= 500:
                 order.shipping_fees = shipping_fee
             order.save()
             print('order has shipping_fees',order.shipping_fees)
@@ -264,7 +264,7 @@ def orderPlaced(request):
             order.save()
             if order.discount_price and int(order.discount_price) <= 500:
                 order.shipping_fees = shipping_fee
-            elif int(order.total_price) <= 500:
+            elif int(float(order.total_price)) <= 500:
                 order.shipping_fees = shipping_fee
             order.save()
             for item in Cart_Item:
@@ -312,7 +312,7 @@ def orderPlaced(request):
             order.save()
             if order.discount_price and order.discount_price <= 500:
                 order.shipping_fees = shipping_fee
-            elif int(order.total_price) <= 500:
+            elif int(float(order.total_price)) <= 500:
                 order.shipping_fees = shipping_fee
             order.save()
             names = []

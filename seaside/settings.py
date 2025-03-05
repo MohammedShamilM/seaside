@@ -1,3 +1,5 @@
+
+
 """
 Django settings for seaside project.
 
@@ -20,19 +22,19 @@ load_dotenv()
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY')
+SECRET_KEY =  os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['0.0.0.0','127.0.0.1','localhost','16.171.232.243','seasidemobilephones.shop','www.seasidemobilephones.shop','172.31.26.225']
 
 
 # Application definition
@@ -98,17 +100,43 @@ TEMPLATES = [
 WSGI_APPLICATION = 'seaside.wsgi.application'
 
 
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+	'file': {
+		'level': 'DEBUG',
+		'class': 'logging.FileHandler',
+		'filename': 'debug.log',
+	},
+     },
+    'loggers' : {
+	'django': {
+	    'handlers': ['file'],
+	    'level' : 'DEBUG' ,
+	    'propagate': True,
+	},
+     },
+}
+
+
+
+
+
+
+
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DATABASE_NAME'),
-        'HOST': os.getenv('DATABASE_HOST') ,
-        'PORT': os.getenv('DATABASE_PORT'),
-        'USER': os.getenv('DATABASE_USER'),
-        'PASSWORD': os.getenv('DATABASE_PASSWORD'),
+        'NAME':  os.getenv('DATABASE_NAME'),
+        'HOST':  os.getenv('DATABASE_HOST'),
+        'PORT':  os.getenv('DATABASE_PORT'),
+        'USER':  os.getenv('DATABASE_USER'),
+        'PASSWORD':  os.getenv('DATABASE_PASSWORD'),
     }
 }
 
@@ -123,7 +151,6 @@ DEFAULT_FROM_EMAIL = "seasidemobilesphones@gmail.com"
 
 
 
-
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
@@ -131,7 +158,7 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
-    {
+	    {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
     },
     {
@@ -160,9 +187,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / "static",]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -183,8 +210,8 @@ SOCIALACCOUNT_PROVIDERS = {
             'access_type': 'online',
         },
         'APP': {
-            'client_id': os.getenv('GOOGLE_CLIENT_ID'),
-            'secret': os.getenv('GOOGLE_CLIENT_SECRET'),
+            'client_id':  os.getenv('GOOGLE_CLIENT_ID'),
+            'secret':  os.getenv('GOOGLE_CLIENT_SECRET'),
             'key': ''
         }
     }
@@ -202,7 +229,6 @@ ACCOUNT_LOGOUT_REDIRECT_URL = 'user_login'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
 
 
 
