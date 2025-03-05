@@ -5,12 +5,12 @@
     <h1 class="text-center">Checkout</h1>
     <div class="container pb-5">
         <h1 class="mb-4">Shipping details</h1>
-        {% if messages %}
-                {% for message in messages %}
-                <h5 style="color: #ff0000;">{{ message }}</h5>
-                {% endfor %}
-                 {% endif %}
         
+                 {% for message in messages %}
+                 {% if "coupon_warnng" in message.tags %}
+                     <div class="alert alert-primary">{{ message }}</div>
+                 {% endif %}
+             {% endfor %}
                  
             <div class="row g-5">
                 <div class="col-md-12 col-lg-6 col-xl-7">
@@ -200,6 +200,16 @@
                     <div class="mt-5">
                         <form action="{% url 'apply_coupon' %}" method="post">
                             {% csrf_token %}
+                            {% for message in messages %}
+                            {% if "coupon_select" in message.tags %}
+                            <div class="alert alert-danger">{{ message }}</div>
+                            {% elif "coupon_amount" in message.tags %}
+                            <div class="alert alert-danger">{{ message }}</div>
+                            {% elif "coupon_used" in message.tags %}
+                            <div class="alert alert-danger">{{ message }}</div>
+                            {% endif %}
+                            {% endfor %}
+
                             {% if message %}
                             <h6 class="text-danger"  style="font-size: smaller;">{{message}}</h6>
                             {% endif %}

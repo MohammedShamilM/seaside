@@ -78,9 +78,11 @@ form input, form textarea {
 
 <div class="add-coupon">
     <h2>Add New Coupon</h2>
-    {% if message %}
-    <h6   style="font-size: smaller;color: red;">{{message}}</h6>
-    {% endif %}
+    {% for message in messages %}
+        {% if "coupon_exist_admin" in message.tags %}
+            <div class="alert alert-danger">{{ message }}</div>
+        {% endif %}
+    {% endfor %}
     <form action="{% url 'add_coupon' %}" method="post">
         {% csrf_token %}
         <label>Coupon Code</label>

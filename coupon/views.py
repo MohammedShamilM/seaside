@@ -24,7 +24,8 @@ def add_coupon(request):
         expiration_date = request.POST.get('expiration_date')
         details = request.POST.get('details')
         if Coupons.objects.filter(code = code).exists():
-            return render(request,'add-coupon.html',{'message' : 'coupon already exist'})
+            messages.error(request,"coupon already exists", extra_tags="coupon_exist_admin")
+            return redirect('add_coupon')
         else:
             coupon = Coupons(code = code, discount = discount, min_order_amount = min_order_amount,expiration_date = expiration_date,details = details)
             coupon.save()
@@ -74,27 +75,23 @@ def edit_coupon(request,coupon_id):
 def apply_coupon(request):
     if request.method == 'POST':
         User = request.user
+        code = request.POST.get('couponcode')
+        if not code:
+            messages.error(request,"select any coupon", extra_tags="coupon_select")
+            return redirect('checkout')
         Cartofuser = cart.objects.get(user = User)
         Cart_Item =  CartItem.objects.filter(Cart = Cartofuser)
         totalprice = sum([item.item_total for item in Cart_Item])
         coupons = Coupons.objects.all().filter(is_active = True)
         order = orders.objects.filter(user = User,discount = 50)
         useraddress = user_address.objects.filter(user = User)
-        code = request.POST.get('couponcode')
-        print(code,totalprice)
         coupon = Coupons.objects.get(code = code)
         order = orders.objects.filter(user = User,discount = coupon.discount).first()
         wallet_balance = Wallet.objects.get(user = User)
         if not order:
             if coupon.min_order_amount > totalprice:
-                message = 'Minimum order amount not reached'
-                return render(request,'checkout.html',{'Cart_Item': Cart_Item,
-                                                       'totalprice': totalprice,                                                           
-                                                       'coupons': coupons,                                                           
-                                                       'useraddress': useraddress,
-                                                       'message' : message,
-                                                       'wallet_balance':wallet_balance})
-
+                messages.error(request,"Minimum order amount not reached", extra_tags="coupon_amount")
+                return redirect('checkout')
 
             if coupon.discount:
                 discount = (totalprice / 100) * coupon.discount
@@ -108,11 +105,7 @@ def apply_coupon(request):
                                                        'useraddress': useraddress,
                                                        'wallet_balance':wallet_balance})
         else:
-            return render(request,'checkout.html',{'Cart_Item': Cart_Item,
-                                                       'totalprice': totalprice,                                                           
-                                                       'coupons': coupons,                                                           
-                                                       'useraddress': useraddress,
-                                                       'message' : 'coupon already used',
-                                                       'wallet_balance':wallet_balance})
+            messages.error(request,"coupon already used", extra_tags="coupon_used")
+            return redirect('checkout')
 
         
