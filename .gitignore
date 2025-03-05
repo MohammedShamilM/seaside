@@ -24,4 +24,5 @@ media/
 .DS_Store
 Thumbs.db     
 
-.vsdebug.log
+.vs
+debug.log
