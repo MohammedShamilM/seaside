@@ -78,7 +78,6 @@
 <section class="status-updates">
     
     <!-- Update Status Option -->
-    {% if order.order_status != 'Returned'   %}
     <div class="update-status">
         <h4>Update Order Status</h4>
         <form action="{% url 'admin_order_detail' order.id %}" method="post">
@@ -98,6 +97,5 @@
             <button type="submit">Update Status</button>
         </form>
     </div>
-    {% endif %}
 </section>
 {% endblock %}
