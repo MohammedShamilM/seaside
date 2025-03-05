@@ -120,6 +120,7 @@ def admin_login(request):
 def send_otp_email(user, otp_instance):
     subject = "Your OTP Code"
     message = f"Your OTP code is {otp_instance.otp}. It expires in 5 minutes."
+    print(message)
     send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
 
 
