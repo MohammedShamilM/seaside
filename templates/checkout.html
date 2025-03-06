@@ -66,6 +66,12 @@
                         </div>
                         {% endfor %}        
                     </div>
+
+                        {% for message in messages %}
+                            {% if "select_address" in message.tags %}
+                            <div class="alert alert-danger mt-2 fade-out">{{ message }}</div>
+                            {% endif %}
+                            {% endfor %}
                     {% if totalprice <= 1000 %}
                     <div class="row g-4 text-center align-items-center justify-content-center border-bottom py-3">
                         <div class="col-12">
@@ -98,6 +104,11 @@
                         </div>
                     </div>
                     {% endif %}
+                    {% for message in messages %}
+                            {% if "select_payment" in message.tags %}
+                            <div class="alert alert-danger mt-2">{{ message }}</div>
+                            {% endif %}
+                            {% endfor %}
                     <input type="hidden" value="{{totalprice}}" name="totalprice">
                     <input type="number"  style="display: none;" value="{{discounted_price}}" name="discounted_price">
                     <input type="hidden" value="{{coupon.discount}}" name="coupon_discount">
@@ -145,7 +156,9 @@
                                             <p class="text-dark">₹{{totalprice}}</p>
                                     </td>
                                 </tr>
-                                {% if totalprice <= 500 %}
+                                
+                                
+                                {% if discounted_price and discounted_price <= 500 %}
                                 <tr>
                                     <th scope="row">
                                     </th>
@@ -157,7 +170,18 @@
                                             <p class="text-dark">₹50</p>
                                     </td>
                                 </tr>
-                                {% elif discounted_price and discounted_price <= 500 %}
+                                <tr>
+                                    <th scope="row">
+                                    </th>
+                                    <td></td>
+                                    <td >
+                                        <p class=" text-dark ">TOTAL</p>
+                                    </td>
+                                    <td>
+                                        <p class="text-dark">₹{{discounted_price |add:50}}</p>
+                                    </td>
+                                </tr>
+                                {% elif totalprice <= 500 %}
                                 <tr>
                                     <th scope="row">
                                     </th>
@@ -169,7 +193,18 @@
                                             <p class="text-dark">₹50</p>
                                     </td>
                                 </tr>
-                                {% endif %}
+                                <tr>
+                                    <th scope="row">
+                                    </th>
+                                    <td></td>
+                                    <td >
+                                        <p class=" text-dark ">TOTAL</p>
+                                    </td>
+                                    <td>
+                                        <p class="text-dark">₹{{totalprice |add:50}}</p>
+                                    </td>
+                                </tr>
+                                {% else %}
                                 <tr>
                                     <th scope="row">
                                     </th>
@@ -184,6 +219,7 @@
                                         {% endif %}
                                     </td>
                                 </tr>
+                                {% endif %}
                             </tbody>
                         </table>
                     </div>
@@ -209,10 +245,6 @@
                             <div class="alert alert-danger">{{ message }}</div>
                             {% endif %}
                             {% endfor %}
-
-                            {% if message %}
-                            <h6 class="text-danger"  style="font-size: smaller;">{{message}}</h6>
-                            {% endif %}
                             <select name="couponcode" id="" class="border-0 border-bottom rounded me-5 py-3 mb-4">
                                 <option value="">select coupon</option>
                                 {% for coupon in coupons %}

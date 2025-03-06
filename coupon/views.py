@@ -107,5 +107,7 @@ def apply_coupon(request):
         else:
             messages.error(request,"coupon already used", extra_tags="coupon_used")
             return redirect('checkout')
+    else:
+        return redirect('checkout')
 
         

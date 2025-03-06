@@ -176,7 +176,11 @@
                                             <p class="text-dark fs-8 fw-bold mb-0 d-inline ">₹{{ variant.offer_price }}</p>
                                             {% endif %}
                                         </div>
+                                        {% if variant.stock != 0 %}
                                         <a onclick="showSuccessToast()" href="{% url 'add_to_cart' variant.id %}" class="btn border border-secondary rounded-pill px-3 text-dark"><i class="fa fa-shopping-bag me-2 text-dark"></i> Add to cart</a>
+                                        {% else  %}
+                                        <h6 class="text-danger ">Out of Stock</p>
+                                        {% endif %}
                                     </div>
                                 </div>
                                 </a>
@@ -230,7 +234,7 @@
             toast: true,
             position: 'top-end',
             showConfirmButton: false,
-            timer: 30000,
+            timer: 3000,
             timerProgressBar: true,
         });
     }

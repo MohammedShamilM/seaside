@@ -27,16 +27,29 @@
             <h3>Order Summary{{totalprice}}</h3>
             <ul>
                 <li><strong>Total Price:</strong> ₹{{order.total_price}}</li>
-                
+                {% if order.shipping_fees %}
+                <li><strong>Shipping:</strong> ₹{{order.shipping_fees}}</li>
+                {% endif %}
+
                 {% if order.discount == 0 %}
                 <li><strong>Discount:</strong>No discounts applied</li>
+                {% if order.shipping_fees %}
+                <li><strong>Final Price:</strong> ₹{{order.total_price |add:50}}</li>
+                {% else %}
                 <li><strong>Final Price:</strong> ₹{{order.total_price}}</li>
+                {% endif %}
                 {% else %}
                 <li><strong>Discount:</strong>{{order.discount}}%</li>
+                {% if order.shipping_fees %}
+                <li><strong>Final Price:</strong> ₹{{order.discount_price |add:50}}</li>
+                {% else %}
                 <li><strong>Final Price:</strong> ₹{{order.discount_price}}</li>
                 {% endif %}
+                {% endif %}
             </ul>
+            {% if order.payment_method != 'Cash On Delivery' %}
             <ul><a href="{% url 'download_invoice' order.id %}" class="download-btn">Download Invoice</a></ul>
+            {% endif %}
         </div>
 
         

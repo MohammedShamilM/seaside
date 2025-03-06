@@ -4,9 +4,11 @@
     <div class="container pb-5" style="text-align: center;">
         <div>
             <h1 class="fw-bold">Cart</h1>
-            {% if message %}
-            <p class="text-danger">{{message}}</p>
+            {% for message in messages %}
+            {% if "remove_zero_stock" in message.tags %}
+            <h6 class="text-danger"  style="font-size: smaller;">{{ message }}</h6>
             {% endif %}
+            {% endfor %}
         </div>
         <div class="table-responsive">
             {% if Cart_Item %}
@@ -32,11 +34,19 @@
                         </th>
                         <td>
                             <p class="mb-0 mt-4">{{item.product.name}}</p>
-                            {% if item.variant.stock <= 0 %}
-                            <h6 class="text-danger"  style="font-size: smaller;">0 stocks available</h6>
-                            {% elif item.variant.stock <= item.quantity %}
-                            <h6 class="text-danger"  style="font-size: smaller;">only {{item.variant.stock}} stocks available</h6>
+                            {% for message in messages %}
+                            {% if "add_limit"|add:item.product.name in message.tags %}
+                            <h6 class="text-danger"  style="font-size: smaller;">{{ message }}</h6>
+                            {% elif "0_tags"|add:item.product.name in message.tags %}
+                            <h6 class="text-danger"  style="font-size: smaller;">{{ message }}</h6>
+                            {% elif "reduce_0"|add:item.product.name in message.tags %}
+                            <h6 class="text-danger"  style="font-size: smaller;">{{ message }}</h6> 
                             {% endif %}
+                            {% endfor %}
+
+                            
+
+                            
                             
                         </td>
                         <td>

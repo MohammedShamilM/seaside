@@ -8,6 +8,9 @@ from datetime import timedelta
 from django.contrib.auth.decorators import login_required
 from wallet.models import Wallet,Transaction
 from django.contrib import messages
+from django.views.decorators.cache import never_cache
+from django.shortcuts import get_object_or_404, redirect
+from django.http import JsonResponse
 
 # Create your views here.
 @login_required(login_url='user_login')
@@ -36,12 +39,44 @@ def add_to_cart(request,variant_id):
         if  CartItem.objects.filter(Cart = Cart, variant = Variant).exists():
             return redirect('cart')
         else:
-            Cart_Item = CartItem(Cart = Cart, variant = Variant, product = Product, item_total = Variant.final_price, image = img )
-            Cart_Item.save()
-            return redirect('cart')
+            if Variant.stock > 0:                
+                Cart_Item = CartItem(Cart = Cart, variant = Variant, product = Product, item_total = Variant.final_price, image = img )
+                Cart_Item.save()
+                return redirect('cart')
+            
         
     else:
         return redirect('home')
+
+
+
+# @login_required(login_url='user_login')
+# def add_to_cart(request, variant_id):
+#     Variant = get_object_or_404(Variant, id=variant_id)
+#     Product = get_object_or_404(Product, id=Variant.product_id)
+#     images = VariantImage.objects.filter(variant=Variant)
+    
+#     img = images[0].image if images.exists() else None  # Handle case where no images exist
+
+#     # Get or create Cart
+#     Cart, created = cart.objects.get_or_create(user=request.user)
+
+#     # Check if the item is already in the cart
+#     if CartItem.objects.filter(Cart=Cart, variant=Variant).exists():
+#         return redirect('cart')
+
+#     if Variant.stock > 0:
+#         Cart_Item = CartItem(
+#             Cart=Cart,
+#             variant=Variant,
+#             product=Product,
+#             item_total=Variant.final_price,
+#             image=img
+#         )
+#         Cart_Item.save()
+#         return JsonResponse({'error': 'Out of stock'}, status=400)
+#     else:
+#         return JsonResponse({'error': 'Out of stock'}, status=400)  
     
 @login_required(login_url='user_login')
 def remove_from_cart(request,variant_id):
@@ -60,11 +95,17 @@ def add_quantity(request,variant_id):
         Variant = variant.objects.get(id = variant_id)
         Cart = cart.objects.get(user = request.user)
         Cart_Item = CartItem.objects.get(Cart = Cart, variant = Variant)
-        if Variant.stock > Cart_Item.quantity:
+        if Variant.stock > Cart_Item.quantity :
+            if Cart_Item.quantity >= 5:
+                messages.warning(request,'maximum 5 products can buy', extra_tags=f'add_limit{Variant.product.name}')
+                return redirect('cart')
             Cart_Item.quantity += 1
             Cart_Item.item_total = Cart_Item.quantity * Variant.final_price
             Cart_Item.save()
-        return redirect('cart')
+            return redirect('cart')
+        else:
+            messages.info(request,f'Only {Variant.stock} Stocks available', extra_tags=f'0_tags{Variant.product.name}')
+            return redirect('cart')
     else:
         return redirect('products')
 
@@ -76,7 +117,8 @@ def remove_quantity(request,variant_id):
         Cart = cart.objects.get(user = request.user)
         Cart_Item = CartItem.objects.get(Cart = Cart, variant = Variant)
         if Cart_Item.quantity == 1:
-            Cart_Item.delete()
+            messages.info(request,'You must have at least one item', extra_tags=f"reduce_0{Variant.product.name}")
+            return redirect('cart')
         else:
             Cart_Item.quantity -= 1
             Cart_Item.item_total = Cart_Item.quantity * Variant.final_price
@@ -85,7 +127,7 @@ def remove_quantity(request,variant_id):
     else:
         return redirect('products')
 
-
+@never_cache
 @login_required(login_url='user_login')
 def checkout (request):
     User = request.user
@@ -108,7 +150,8 @@ def checkout (request):
     # -----------------------------------------#
     for item in Cart_Item:
         if item.variant.stock <= 0:
-            return render (request,'cart.html',{'Cart_Item': Cart_Item,'totalprice': totalprice,'message' : 'Remove 0 stock product from cart'})
+            messages.error(request,'Remove 0 stock product from cart', extra_tags='remove_zero_stock')
+            return redirect('cart')
 
     # checking is there any over quantity products#
     # -----------------------------------------#    
@@ -155,7 +198,7 @@ from django.views.decorators.csrf import csrf_exempt
 from decimal import Decimal,InvalidOperation
 from django.http import HttpResponse
 
-
+@never_cache
 @login_required(login_url='user_login')
 def orderPlaced(request):
     if request.method == 'POST':
@@ -163,16 +206,18 @@ def orderPlaced(request):
         payment_method = request.POST.get('paymentmethod')
         totalprice = request.POST.get('totalprice')
         discount_price = request.POST.get('discounted_price')
-        if discount_price == '':
+        if not useraddress :
+            messages.error(request,"Please choose or add an address to continue", extra_tags="select_address")
+            return redirect('checkout')
+        if not payment_method :
+            messages.error(request,"Please choose a payment method to continue", extra_tags="select_payment")
+            return redirect('checkout')
+        if not discount_price :
             discount_price = 0
         shipping_fee = request.POST.get('shipping_fees')
-        print('shipping fees',shipping_fee)
-        
-        print('this is the total price ',totalprice)
-        print('this is the discount price',discount_price)
-
+        print('this is shipping fee',shipping_fee)
         coupon_discount = request.POST.get('coupon_discount')
-        if coupon_discount == '':
+        if not coupon_discount:
             coupon_discount = 0
         User = request.user
         Cartofuser = cart.objects.get(user=User)
@@ -214,7 +259,6 @@ def orderPlaced(request):
             elif int(float(order.total_price)) <= 500:
                 order.shipping_fees = shipping_fee
             order.save()
-            print('order has shipping_fees',order.shipping_fees)
 
             for item in Cart_Item:
                 order_item = order_items(
@@ -238,14 +282,22 @@ def orderPlaced(request):
             client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
             client.set_app_details({"title": "seaside", "version": "1.0"})
             if discount_price:
+                if shipping_fee:
+                    razorpay_amount  = int(float(discount_price)) + int(shipping_fee)
+                else:
+                    razorpay_amount = int(float(discount_price))
                 razorpay_order = client.order.create({
-                    "amount": int(float(discount_price)) * 100,  # Razorpay expects amount in paise
+                    "amount": razorpay_amount * 100,  # Razorpay expects amount in paise
                     "currency": "INR",
                     "payment_capture": "1"  # Auto-capture payment
                 })
             else:
+                if shipping_fee:
+                    razorpay_amount  = int(totalprice) + int(shipping_fee)
+                else:
+                    razorpay_amount = int(totalprice)
                 razorpay_order = client.order.create({
-                    "amount": int(float(totalprice)) * 100,  # Razorpay expects amount in paise
+                    "amount": razorpay_amount * 100,  # Razorpay expects amount in paise
                     "currency": "INR",
                     "payment_capture": "1"  # Auto-capture payment
                 })
