@@ -9,7 +9,7 @@ from django.core.paginator import Paginator
 def user_list(request):
     if request.user.is_staff:
         User = get_user_model()
-        users = User.objects.all().order_by('id')
+        users = User.objects.all().order_by('id').exclude(is_staff = True)
         paginator = Paginator(users,7)
 
         page_number = request.GET.get('page',1)

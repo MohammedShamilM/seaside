@@ -135,7 +135,7 @@ def verify_otp(request):
 
             if otp_instance.is_expired():
                 messages.error(request, "The OTP has expired.")
-                return redirect('user_login')
+                return redirect('verify_otp')
 
             if otp_instance.otp == otp:
                 # OTP matches and is valid
