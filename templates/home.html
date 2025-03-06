@@ -157,7 +157,7 @@
                                                     {% if variant.stock != 0 %}
                                                     <a onclick="showSuccessToast()" href="{% url 'add_to_cart' variant.id %}" class="btn border border-secondary rounded-pill px-3 text-dark"><i class="fa fa-shopping-bag me-2 text-dark"></i> Add to cart</a>
                                                     {% else  %}
-                                                    <h6 class="text-danger ">Out of Stock</p>
+                                                    <a title="Item Out of Stock" class="btn border border-danger rounded-pill px-3 text-danger">Out of Stock</a>
                                                     {% endif %}
                                                 </div>
                                             </div>

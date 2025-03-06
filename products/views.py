@@ -3,6 +3,7 @@ from . models import category,product, variant, VariantImage,Review
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from products.models import variant
+from django.core.paginator import Paginator
 
 
 
@@ -12,7 +13,11 @@ from products.models import variant
 def categories (request):
     if request.user.is_staff:
         categories = category.objects.all().order_by('id')
-        return render(request,'admin-category.html',{'categories':categories})
+        paginator = Paginator(categories,7)
+
+        page_number = request.GET.get('page',1)
+        page_obj = paginator.get_page(page_number)
+        return render(request,'admin-category.html',{'categories':page_obj})
     else:
         return redirect('user_login')
 
@@ -85,7 +90,11 @@ def toggle_category_status(request, category_id):
 def products (request):
     if request.user.is_staff:
         variants = variant.objects.select_related('product__category').prefetch_related('images').order_by('id')
-        return render(request,'admin-product.html',{'variants': variants})
+        paginator = Paginator(variants,7)
+
+        page_number = request.GET.get('page',1)
+        page_obj = paginator.get_page(page_number)
+        return render(request,'admin-product.html',{'variants': page_obj})
     else:
         return redirect('user_login')
     

@@ -4,14 +4,19 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from wallet.models import Wallet,Transaction
 from products.models import variant
-
+from django.core.paginator import Paginator
 
 # Create your views here.
 @login_required(login_url='admin_login')
 def admin_order_list(request):
     if request.user.is_staff:
         order_list = orders.objects.all().order_by('-created_at')
-        return render(request, 'admin-order-list.html',{'order_list': order_list})  
+        paginator = Paginator(order_list,10)
+
+        page_number = request.GET.get('page',1)
+        page_obj = paginator.get_page(page_number)
+
+        return render(request, 'admin-order-list.html',{'order_list': page_obj})  
     else:
         return redirect('user_login')
 

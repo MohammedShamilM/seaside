@@ -104,7 +104,25 @@ table th {
     background-color: red;
     color: rgb(255, 255, 255);
 }
+.pagination {
+display: flex;
+gap: 10px;
+margin: 10px 0;
+}
+.pagination a {
+padding: 5px 10px;
+border: 1px solid #ff9900;
+text-decoration: none;
+background-color: rgb(255, 255, 255);
+color: black;
+border-radius: 5px;
+cursor: pointer;
+transition: background-color 0.3s;
+}
 
+.pagination span {
+padding: 5px;
+}
 
     </style>
     <header>
@@ -155,6 +173,19 @@ table th {
                 </tbody>
             </table>
         </div>
+        <div class="pagination">
+            {% if users.has_previous %}
+              <a href="?page=1" >First</a>
+              <a href="?page={{ users.previous_page_number }}" >Previous</a>
+            {% endif %}
+          
+            <span>Page {{ users.number }} of {{ users.paginator.num_pages }}</span>
+          
+            {% if users.has_next %}
+              <a href="?page={{ users.next_page_number }}">Next</a>
+              <a href="?page={{ users.paginator.num_pages }}" >Last</a>
+            {% endif %}
+          </div>
     </section>
     {% endblock %}
 </body>

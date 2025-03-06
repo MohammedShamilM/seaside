@@ -109,8 +109,9 @@
                                 {% if variant.stock != 0 %}
                                 <a onclick="showSuccessToast()" href="{% url 'add_to_cart' variant.id %}"  class="btn border border-secondary rounded-pill px-4 py-2 mb-4 text-secondary"><i class="fa fa-shopping-bag me-2 text-secondary"></i> Add to cart</a>
                                 {% else  %}
-                                <h6 class="text-danger ">Out of Stock</p>
+                                <a  class="btn border border-danger rounded-pill px-3 text-danger"><i class="fa fa-shoppng-bag me-2 text-dark"></i>Out of Stock</a>
                                 {% endif %}
+                                <br>
                                 <br>
                                 <a onclick="showSuccessToast()" href="{% url 'add_to_wishlist' variant.id  %}" class="btn border border-secondary rounded-pill px-4 py-2 mb-4 text-secondary"><i class="fa fa-shopping-bag me-2 text-secondary"></i> Add to wishlist</a>
                                 {% endfor %}

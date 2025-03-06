@@ -179,7 +179,7 @@
                                         {% if variant.stock != 0 %}
                                         <a onclick="showSuccessToast()" href="{% url 'add_to_cart' variant.id %}" class="btn border border-secondary rounded-pill px-3 text-dark"><i class="fa fa-shopping-bag me-2 text-dark"></i> Add to cart</a>
                                         {% else  %}
-                                        <h6 class="text-danger ">Out of Stock</p>
+                                        <a  class="btn border border-danger rounded-pill px-3 text-danger">Out of Stock</a>
                                         {% endif %}
                                     </div>
                                 </div>
@@ -197,13 +197,31 @@
                                         <img src="{{ variant.images.all.0.image.url }}" class="img-fluid w-100 rounded-top" alt="">
                                     </div>
                                     <div class="p-4">
-                                        <h4>{{variant.product.name}}</h4>
+                                        <h4>{{variant.product.name | slice:":16"}}</h4>
+                                        {% if variant.color and variant.storage %}
                                         <p>({{variant.color}}, {{variant.storage}})</p>
-                                        <p>{{variant.product.description| slice:":77"}}</p>
+                                        {% elif variant.color %}
+                                        <p>({{variant.color}})</p>
+                                        {% elif variant.storage %}
+                                        <p>({{variant.storage}})</p>
+                                        {% else %}
+                                        <p>Accessories</p>
+                                        {% endif %}
+                                        <p>{{variant.product.description| slice:":45"}}</p>
                                         <div class="d-flex justify-content-between flex-lg-wrap">
-                                            <p class="text-dark fs-5 fw-bold mb-0">₹{{ variant.price }}</p>
-                                            <a onclick="showSuccessToast()" href="{% url 'add_to_cart' variant.id %}" class="btn border border-secondary rounded-pill px-3 text-dark"><i class="fa fa-shopping-bag me-2 text-dark"></i> Add to cart</a>
+                                            {% if  variant.offer_price is None %}
+                                            <p class="text-dark fs-8 fw-bold mb-0">₹{{ variant.price }}</p>
+                                            {% else %}
+                                            <p class="text-danger fs-8 fw-bold mb-0 d-inline" style="text-decoration: line-through;">₹ {{ variant.price }}</p>
+                                            <p class="text-dark fs-8 fw-bold mb-0 d-inline ">₹{{ variant.offer_price }}</p>
+                                            {% endif %}
                                         </div>
+                                        {% if variant.stock != 0 %}
+                                        <a onclick="showSuccessToast()" href="{% url 'add_to_cart' variant.id %}" class="btn border border-secondary rounded-pill px-3 text-dark"><i class="fa fa-shopping-bag me-2 text-dark"></i> Add to cart</a>
+                                        {% else  %}
+                                        <a  class="btn border border-danger rounded-pill px-3 text-danger"><i class="fa fa-shoppng-bag me-2 text-dark"></i>Out of Stock</a>
+                                        {% endif %}
+                                        
                                     </div>
                                 </div>
                                 </a>

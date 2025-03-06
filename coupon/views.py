@@ -6,6 +6,7 @@ from cartandcheckout.models import cart,CartItem
 from useraccount.models import user_address
 from orders.models import orders
 from wallet.models import Wallet
+from django.core.paginator import Paginator
 
 
 
@@ -13,7 +14,11 @@ from wallet.models import Wallet
 @login_required(login_url='admin_login')
 def coupon(request):
     coupons = Coupons.objects.order_by('-created_at')
-    return render(request,'coupon.html',{'coupons':coupons})
+    paginator = Paginator(coupons,7)
+
+    page_number = request.GET.get('page',1)
+    page_obj = paginator.get_page(page_number)
+    return render(request,'coupon.html',{'coupons':page_obj})
 
 @login_required(login_url='admin_login')
 def add_coupon(request):

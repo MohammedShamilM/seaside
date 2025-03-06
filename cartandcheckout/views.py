@@ -11,6 +11,7 @@ from django.contrib import messages
 from django.views.decorators.cache import never_cache
 from django.shortcuts import get_object_or_404, redirect
 from django.http import JsonResponse
+from django.core.paginator import Paginator
 
 # Create your views here.
 @login_required(login_url='user_login')
@@ -21,7 +22,11 @@ def Cart(request):
     Cartofuser = cart.objects.get(user = User)
     Cart_Item =  CartItem.objects.filter(Cart = Cartofuser).order_by('-created_at')
     totalprice = sum([item.item_total for item in Cart_Item])
-    return render (request,'cart.html',{'Cart_Item': Cart_Item,'totalprice': totalprice})
+    paginator = Paginator(Cart_Item,3)
+
+    page_number = request.GET.get('page',1)
+    page_obj = paginator.get_page(page_number)
+    return render (request,'cart.html',{'Cart_Item': page_obj,'totalprice': totalprice})
 
 @login_required(login_url='user_login')
 def add_to_cart(request,variant_id):

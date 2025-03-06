@@ -81,6 +81,41 @@
                     
                 </tbody>
             </table>
+            <style>
+                .pagination {
+                display: flex;
+                gap: 10px;
+                margin: 10px 0;
+                }
+                .pagination a {
+                padding: 5px 10px;
+                border: 1px solid #ff9900;
+                text-decoration: none;
+                background-color: rgb(255, 255, 255);
+                color: black;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: background-color 0.3s;
+                }
+                
+                .pagination span {
+                padding: 5px;
+                }
+    
+            </style>
+            <div class="pagination">
+                {% if Cart_Item.has_previous %}
+                  <a href="?page=1" >First</a>
+                  <a href="?page={{ Cart_Item.previous_page_number }}" >Previous</a>
+                {% endif %}
+              
+                <span>Page {{ Cart_Item.number }} of {{ Cart_Item.paginator.num_pages }}</span>
+              
+                {% if Cart_Item.has_next %}
+                  <a href="?page={{ Cart_Item.next_page_number }}">Next</a>
+                  <a href="?page={{ Cart_Item.paginator.num_pages }}" >Last</a>
+                {% endif %}
+              </div>
         </div>
         <!-- <div class="mt-5">
             <form action="{% url 'apply_coupon' %}" method="post">

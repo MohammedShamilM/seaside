@@ -2,6 +2,7 @@ from django.shortcuts import render,redirect
 from . models import wishlist,WhishlistItem
 from products.models import variant,product, VariantImage
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 
 
 # Create your views here.
@@ -12,8 +13,11 @@ def Wishlist(request):
     wishlistuser = wishlist.objects.get_or_create(user = User)
     Wishlistofuser = wishlist.objects.get(user = User)
     Wishlist_Item =  WhishlistItem.objects.filter(Wishlist = Wishlistofuser)
-    
-    return render (request,'wishlist.html',{'Wishlist_Item': Wishlist_Item})
+    paginator = Paginator(Wishlist_Item,3)
+
+    page_number = request.GET.get('page',1)
+    page_obj = paginator.get_page(page_number)
+    return render (request,'wishlist.html',{'Wishlist_Item': page_obj})
 
 @login_required(login_url='user_login')
 def add_to_wishlist(request,variant_id):

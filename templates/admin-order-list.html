@@ -72,8 +72,45 @@
                 </tr>
                 {% endfor %}
                 {% endif %}
+                
+    
             </tbody>
         </table>
+        <style>
+            .pagination {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+            }
+            .pagination a {
+            padding: 5px 10px;
+            border: 1px solid #ff9900;
+            text-decoration: none;
+            background-color: rgb(255, 255, 255);
+            color: black;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            }
+            
+            .pagination span {
+            padding: 5px;
+            }
+
+        </style>
+        <div class="pagination">
+            {% if order_list.has_previous %}
+              <a href="?page=1" >First</a>
+              <a href="?page={{ order_list.previous_page_number }}" >Previous</a>
+            {% endif %}
+          
+            <span>Page {{ order_list.number }} of {{ order_list.paginator.num_pages }}</span>
+          
+            {% if order_list.has_next %}
+              <a href="?page={{ order_list.next_page_number }}">Next</a>
+              <a href="?page={{ order_list.paginator.num_pages }}" >Last</a>
+            {% endif %}
+          </div>
     </div>
 </section>
 {% endif %}
